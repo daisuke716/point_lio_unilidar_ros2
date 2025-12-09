@@ -8,7 +8,7 @@
       con_frame_num: 1
       cut_frame: false
       cut_frame_time_interval: 0.1
-      time_lag_imu_to_lidar: 0.0
+      time_lag_imu_to_lidar: 0.08
 
     preprocess:
       lidar_type: 5
@@ -47,7 +47,7 @@
                     0.0, 0.0, 1.0]
 
     odometry:
-      publish_odometry_without_downsample: true
+      publish_odometry_without_downsample: false
 
     publish:
       path_en: true

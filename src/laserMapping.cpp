@@ -1,5 +1,6 @@
 #include <omp.h>
 #include <mutex>
+#include <memory>
 #include <math.h>
 #include <thread>
 #include <fstream>
@@ -106,6 +107,9 @@ void SigHandle(int sig)
     RCLCPP_WARN(rclcpp::get_logger("pointlio_mapping"), "catch sig %d", sig);
     sig_buffer.notify_all();
 }
+
+// Persistent TF broadcaster (reuse to avoid repeated construction)
+std::shared_ptr<tf2_ros::TransformBroadcaster> g_tf_broadcaster = nullptr;
 
 inline builtin_interfaces::msg::Time to_time_msg(double t)
 {
@@ -274,22 +278,22 @@ void standard_pcl_cbk(const sensor_msgs::msg::PointCloud2::SharedPtr &msg)
 {
     // std::cout << "standard_pcl_cbk() run once!\n";
 
-    mtx_buffer.lock();
-
-    scan_count++;
-
     double preprocess_start_time = omp_get_wtime();
 
-    if (time_from_msg(msg->header.stamp) < last_timestamp_lidar)
+    // Quick sanity check and update of last_timestamp_lidar within lock
+    int my_scan_count;
     {
-        RCLCPP_ERROR(rclcpp::get_logger("pointlio_mapping"), "lidar loop back, clear buffer");
-
-        mtx_buffer.unlock();
-        sig_buffer.notify_all();
-        return;
+        std::unique_lock<std::mutex> lk(mtx_buffer);
+        scan_count++;
+        my_scan_count = scan_count;
+        if (time_from_msg(msg->header.stamp) < last_timestamp_lidar)
+        {
+            RCLCPP_ERROR(rclcpp::get_logger("pointlio_mapping"), "lidar loop back, clear buffer");
+            sig_buffer.notify_all();
+            return;
+        }
+        last_timestamp_lidar = time_from_msg(msg->header.stamp);
     }
-
-    last_timestamp_lidar = time_from_msg(msg->header.stamp);
 
     PointCloudXYZI::Ptr ptr(new PointCloudXYZI());
     PointCloudXYZI::Ptr ptr_div(new PointCloudXYZI());
@@ -318,9 +322,12 @@ void standard_pcl_cbk(const sensor_msgs::msg::PointCloud2::SharedPtr &msg)
                 PointCloudXYZI::Ptr ptr_div_i(new PointCloudXYZI());
                 *ptr_div_i = *ptr_div;
 
-                lidar_buffer.push_back(ptr_div_i);
+                {
+                    std::unique_lock<std::mutex> lk(mtx_buffer);
+                    lidar_buffer.push_back(ptr_div_i);
+                    time_buffer.push_back(time_div);
+                }
 
-                time_buffer.push_back(time_div);
                 time_div += ptr->points[i].curvature / double(1000);
                 ptr_div->clear();
             }
@@ -328,8 +335,8 @@ void standard_pcl_cbk(const sensor_msgs::msg::PointCloud2::SharedPtr &msg)
 
         if (!ptr_div->empty())
         {
+            std::unique_lock<std::mutex> lk(mtx_buffer);
             lidar_buffer.push_back(ptr_div);
-
             time_buffer.push_back(time_div);
         }
     }
@@ -364,11 +371,12 @@ void standard_pcl_cbk(const sensor_msgs::msg::PointCloud2::SharedPtr &msg)
     }
     else
     {
+        // Use header stamp directly as scan begin time (consistent with ROS1 behavior)
+        std::unique_lock<std::mutex> lk(mtx_buffer);
         lidar_buffer.emplace_back(ptr);
-    time_buffer.emplace_back(time_from_msg(msg->header.stamp));
+        time_buffer.emplace_back(time_from_msg(msg->header.stamp));
     }
-    s_plot11[scan_count] = omp_get_wtime() - preprocess_start_time;
-    mtx_buffer.unlock();
+    s_plot11[my_scan_count] = omp_get_wtime() - preprocess_start_time;
     sig_buffer.notify_all();
 }
 
@@ -385,73 +393,55 @@ void imu_cbk(const sensor_msgs::msg::Imu::SharedPtr &msg_in)
 
     double timestamp = double(msg->header.stamp.sec) + double(msg->header.stamp.nanosec) * 1e-9;
 
-    mtx_buffer.lock();
-
-    if (timestamp < last_timestamp_imu)
     {
-    RCLCPP_ERROR(rclcpp::get_logger("pointlio_mapping"), "imu loop back, clear deque");
+        std::unique_lock<std::mutex> lk(mtx_buffer);
+        if (timestamp < last_timestamp_imu)
+        {
+            RCLCPP_ERROR(rclcpp::get_logger("pointlio_mapping"), "imu loop back, clear deque");
+            sig_buffer.notify_all();
+            return;
+        }
 
-        mtx_buffer.unlock();
-        sig_buffer.notify_all();
-        return;
+        imu_deque.emplace_back(msg);
+        last_timestamp_imu = timestamp;
     }
-
-    imu_deque.emplace_back(msg);
-
-    last_timestamp_imu = timestamp;
-
-    mtx_buffer.unlock();
     sig_buffer.notify_all();
 }
 
-
 bool sync_packages(MeasureGroup &meas)
 {
-
+    // Non-IMU mode: just pop LiDAR buffer and return
     if (!imu_en)
     {
         if (!lidar_buffer.empty())
         {
-
             meas.lidar = lidar_buffer.front();
             meas.lidar_beg_time = time_buffer.front();
-            time_buffer.pop_front();
-            lidar_buffer.pop_front();
-
             if (meas.lidar->points.size() < 1)
             {
-                cout << "lose lidar" << std::endl;
+                cout << "lose lidar" << endl;
                 return false;
             }
-
             double end_time = meas.lidar->points.back().curvature;
             for (auto pt : meas.lidar->points)
-            {
                 if (pt.curvature > end_time)
-                {
                     end_time = pt.curvature;
-                }
-            }
             lidar_end_time = meas.lidar_beg_time + end_time / double(1000);
-
             meas.lidar_last_time = lidar_end_time;
-
+            lidar_buffer.pop_front();
+            time_buffer.pop_front();
             return true;
         }
         return false;
     }
 
     if (lidar_buffer.empty() || imu_deque.empty())
-    {
         return false;
-    }
 
-    /*** push a lidar scan ***/
+    // push a lidar scan
     if (!lidar_pushed)
     {
-
         meas.lidar = lidar_buffer.front();
-
         if (meas.lidar->points.size() < 1)
         {
             cout << "lose lidar" << endl;
@@ -459,34 +449,28 @@ bool sync_packages(MeasureGroup &meas)
             time_buffer.pop_front();
             return false;
         }
-
         meas.lidar_beg_time = time_buffer.front();
-
         double end_time = meas.lidar->points.back().curvature;
         for (auto pt : meas.lidar->points)
-        {
             if (pt.curvature > end_time)
-            {
                 end_time = pt.curvature;
-            }
-        }
         lidar_end_time = meas.lidar_beg_time + end_time / double(1000);
-
         meas.lidar_last_time = lidar_end_time;
         lidar_pushed = true;
     }
 
     if (last_timestamp_imu < lidar_end_time)
     {
+        RCLCPP_DEBUG(rclcpp::get_logger("pointlio_mapping"), "IMU lagging: last_imu=%.9f lidar_end=%.9f imu_deque=%zu lidar_buf=%zu", last_timestamp_imu, lidar_end_time, imu_deque.size(), lidar_buffer.size());
         return false;
     }
 
-    /*** push imu data, and pop from imu buffer ***/
+    // push imu data, and pop from imu buffer
     if (p_imu->imu_need_init_)
     {
         double imu_time = time_from_msg(imu_deque.front()->header.stamp);
         meas.imu.shrink_to_fit();
-        while ((!imu_deque.empty()) && (imu_time < lidar_end_time))
+        while ((!imu_deque.empty()) && (imu_time <= lidar_end_time))
         {
             imu_time = time_from_msg(imu_deque.front()->header.stamp);
             if (imu_time > lidar_end_time)
@@ -497,14 +481,23 @@ bool sync_packages(MeasureGroup &meas)
             imu_next = *(imu_deque.front());
             imu_deque.pop_front();
         }
+        // If we didn't reach lidar_end_time but next IMU sample exists, copy it for interpolation
+        if (!meas.imu.empty())
+        {
+            double lastp = time_from_msg(meas.imu.back()->header.stamp);
+            if (lastp < lidar_end_time && !imu_deque.empty())
+            {
+                meas.imu.emplace_back(imu_deque.front());
+            }
+        }
+        RCLCPP_DEBUG(rclcpp::get_logger("pointlio_mapping"), "Collected %zu IMU samples (need_init) up to lidar_end=%.9f", meas.imu.size(), lidar_end_time);
     }
     else if (!init_map)
     {
         double imu_time = time_from_msg(imu_deque.front()->header.stamp);
         meas.imu.shrink_to_fit();
-        meas.imu.emplace_back(imu_last_ptr);
-
-        while ((!imu_deque.empty()) && (imu_time < lidar_end_time))
+        if (imu_last_ptr) meas.imu.emplace_back(imu_last_ptr);
+        while ((!imu_deque.empty()) && (imu_time <= lidar_end_time))
         {
             imu_time = time_from_msg(imu_deque.front()->header.stamp);
             if (imu_time > lidar_end_time)
@@ -515,11 +508,48 @@ bool sync_packages(MeasureGroup &meas)
             imu_next = *(imu_deque.front());
             imu_deque.pop_front();
         }
+        // ensure we also have a future sample for interpolation
+        if (!meas.imu.empty())
+        {
+            double lastp = time_from_msg(meas.imu.back()->header.stamp);
+            if (lastp < lidar_end_time && !imu_deque.empty())
+            {
+                meas.imu.emplace_back(imu_deque.front());
+            }
+        }
+        RCLCPP_DEBUG(rclcpp::get_logger("pointlio_mapping"), "Collected %zu IMU samples (no-init-map) up to lidar_end=%.9f", meas.imu.size(), lidar_end_time);
+    }
+    else
+    {
+        double imu_time = time_from_msg(imu_deque.front()->header.stamp);
+        meas.imu.shrink_to_fit();
+        while ((!imu_deque.empty()) && (imu_time <= lidar_end_time))
+        {
+            imu_time = time_from_msg(imu_deque.front()->header.stamp);
+            if (imu_time > lidar_end_time)
+                break;
+            meas.imu.emplace_back(imu_deque.front());
+            imu_last = imu_next;
+            imu_last_ptr = imu_deque.front();
+            imu_next = *(imu_deque.front());
+            imu_deque.pop_front();
+        }
+        // copy next sample for interpolation if needed
+        if (!meas.imu.empty())
+        {
+            double lastp = time_from_msg(meas.imu.back()->header.stamp);
+            if (lastp < lidar_end_time && !imu_deque.empty())
+            {
+                meas.imu.emplace_back(imu_deque.front());
+            }
+        }
+        RCLCPP_DEBUG(rclcpp::get_logger("pointlio_mapping"), "Collected %zu IMU samples (normal) up to lidar_end=%.9f", meas.imu.size(), lidar_end_time);
     }
 
     lidar_buffer.pop_front();
     time_buffer.pop_front();
     lidar_pushed = false;
+    RCLCPP_DEBUG(rclcpp::get_logger("pointlio_mapping"), "sync_packages ready: lidar_buf=%zu imu_buf=%zu collected_imu=%zu", lidar_buffer.size(), imu_deque.size(), meas.imu.size());
     return true;
 }
 
@@ -529,8 +559,8 @@ void map_incremental()
 {
     PointVector PointToAdd;
     PointVector PointNoNeedDownsample;
-    PointToAdd.reserve(feats_down_size);
-    PointNoNeedDownsample.reserve(feats_down_size);
+    PointToAdd.resize(feats_down_size);
+    PointNoNeedDownsample.resize(feats_down_size);
 
     for (int i = 0; i < feats_down_size; i++)
     {
@@ -613,15 +643,8 @@ void publish_frame_world(const rclcpp::Publisher<sensor_msgs::msg::PointCloud2>:
     sensor_msgs::msg::PointCloud2 laserCloudmsg;
         pcl::toROSMsg(*laserCloudWorld, laserCloudmsg);
 
-    // Prefer the latest odom timestamp so TF lookups succeed for this cloud
-    if (odomAftMapped.header.stamp.sec != 0 || odomAftMapped.header.stamp.nanosec != 0)
-    {
-        laserCloudmsg.header.stamp = odomAftMapped.header.stamp;
-    }
-    else
-    {
-        laserCloudmsg.header.stamp = to_time_msg(lidar_end_time);
-    }
+    // Keep ROS1 behavior: stamp with lidar_end_time to avoid TF jitter between frames
+    laserCloudmsg.header.stamp = to_time_msg(lidar_end_time);
         laserCloudmsg.header.frame_id = "camera_init";
     if (pubLaserCloudFullRes) pubLaserCloudFullRes->publish(laserCloudmsg);
     // (No one-time TF fallback here) keep TF publishing logic unchanged.
@@ -681,15 +704,8 @@ void publish_frame_body(const rclcpp::Publisher<sensor_msgs::msg::PointCloud2>::
 
     sensor_msgs::msg::PointCloud2 laserCloudmsg;
     pcl::toROSMsg(*laserCloudIMUBody, laserCloudmsg);
-    // Prefer latest odom stamp for body cloud as well
-    if (odomAftMapped.header.stamp.sec != 0 || odomAftMapped.header.stamp.nanosec != 0)
-    {
-        laserCloudmsg.header.stamp = odomAftMapped.header.stamp;
-    }
-    else
-    {
-        laserCloudmsg.header.stamp = to_time_msg(lidar_end_time);
-    }
+    // ROS1 behavior: stamp with lidar_end_time
+    laserCloudmsg.header.stamp = to_time_msg(lidar_end_time);
     laserCloudmsg.header.frame_id = "body";
     if (pubLaserCloudFull_body) pubLaserCloudFull_body->publish(laserCloudmsg);
     static int pub_body_debug_cnt = 0;
@@ -745,7 +761,6 @@ void publish_odometry(const rclcpp::Publisher<nav_msgs::msg::Odometry>::SharedPt
     // TF2 transform broadcast: publish odom-stamped transform for aft_mapped
     try
     {
-        tf2_ros::TransformBroadcaster br(node);
         geometry_msgs::msg::TransformStamped t;
         t.header.frame_id = "camera_init";
         t.child_frame_id = "aft_mapped";
@@ -754,7 +769,10 @@ void publish_odometry(const rclcpp::Publisher<nav_msgs::msg::Odometry>::SharedPt
         t.transform.translation.z = odomAftMapped.pose.pose.position.z;
         t.transform.rotation = odomAftMapped.pose.pose.orientation;
         t.header.stamp = odomAftMapped.header.stamp;
-        br.sendTransform(t);
+        if (g_tf_broadcaster)
+        {
+            g_tf_broadcaster->sendTransform(t);
+        }
     }
     catch (const std::exception &e)
     {
@@ -782,6 +800,8 @@ int main(int argc, char **argv)
 {
     rclcpp::init(argc, argv);
     auto node = rclcpp::Node::make_shared("laserMapping");
+    // Initialize persistent transform broadcaster
+    g_tf_broadcaster = std::make_shared<tf2_ros::TransformBroadcaster>(node);
     // g_node assignment removed
 
     readParameters(node);
@@ -867,8 +887,11 @@ int main(int argc, char **argv)
 
 
     // ROS2 subscriptions & publishers
-    auto sub_pcl = node->create_subscription<sensor_msgs::msg::PointCloud2>(lid_topic, rclcpp::SensorDataQoS(), [](const sensor_msgs::msg::PointCloud2::SharedPtr msg){ standard_pcl_cbk(msg); });
-    auto sub_imu = node->create_subscription<sensor_msgs::msg::Imu>(imu_topic, rclcpp::SensorDataQoS(), [](const sensor_msgs::msg::Imu::SharedPtr msg){ imu_cbk(msg); });
+    rclcpp::QoS sub_qos_sensor(rclcpp::KeepLast(2000));
+    sub_qos_sensor.best_effort();
+    sub_qos_sensor.durability_volatile();
+    auto sub_pcl = node->create_subscription<sensor_msgs::msg::PointCloud2>(lid_topic, sub_qos_sensor, [](const sensor_msgs::msg::PointCloud2::SharedPtr msg){ standard_pcl_cbk(msg); });
+    auto sub_imu = node->create_subscription<sensor_msgs::msg::Imu>(imu_topic, sub_qos_sensor, [](const sensor_msgs::msg::Imu::SharedPtr msg){ imu_cbk(msg); });
 
     // Choose QoS for pointclouds based on parameter
     rclcpp::QoS cloud_qos(rclcpp::KeepLast(5));
@@ -1057,8 +1080,8 @@ int main(int argc, char **argv)
 
         /*** iterated state estimation ***/
 
-        crossmat_list.reserve(feats_down_size);
-        pbody_list.reserve(feats_down_size);
+        crossmat_list.resize(feats_down_size);
+        pbody_list.resize(feats_down_size);
 
         for (size_t i = 0; i < feats_down_body->size(); i++)
         {

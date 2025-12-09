@@ -5,7 +5,7 @@ from ament_index_python.packages import get_package_share_directory
 
 def generate_launch_description():
 
-    pkg_dir = get_package_share_directory('point_lio_unilidar')
+    pkg_dir = get_package_share_directory('point_lio_unilidar_ros2')
 
     config_file = PathJoinSubstitution([
         pkg_dir,
@@ -20,7 +20,7 @@ def generate_launch_description():
     ])
 
     lio_node = Node(
-        package='point_lio_unilidar',
+        package='point_lio_unilidar_ros2',
         executable='pointlio_mapping',
         name='laserMapping',
         output='screen',

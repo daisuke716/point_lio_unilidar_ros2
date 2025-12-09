@@ -190,6 +190,12 @@ void h_model_input(state_input &s, esekfom::dyn_share_modified<double> &ekfom_da
 		PointType &point_body_j  = feats_down_body->points[idx+j+1];
 		PointType &point_world_j = feats_down_world->points[idx+j+1];
 		pointBodyToWorld(&point_body_j, &point_world_j); 
+		if (idx + j + 1 >= (int)pbody_list.size())
+		{
+			RCLCPP_ERROR(rclcpp::get_logger("pointlio_mapping"), "Index out of bounds on pbody_list: idx+j+1=%d size=%zu", idx + j + 1, pbody_list.size());
+			ekfom_data.valid = false;
+			return;
+		}
 		V3D p_body = pbody_list[idx+j+1];
 		V3D p_world;
 		p_world << point_world_j.x, point_world_j.y, point_world_j.z;
@@ -252,6 +258,12 @@ void h_model_input(state_input &s, esekfom::dyn_share_modified<double> &ekfom_da
 			}
 			else
 			{   
+				if (idx + j + 1 >= (int)crossmat_list.size())
+				{
+					RCLCPP_ERROR(rclcpp::get_logger("pointlio_mapping"), "Index out of bounds on crossmat_list: idx+j+1=%d size=%zu", idx + j + 1, crossmat_list.size());
+					ekfom_data.valid = false;
+					return;
+				}
 				M3D point_crossmat = crossmat_list[idx+j+1];
 				V3D C(s.rot.conjugate().normalized() * norm_vec);
 				V3D A(point_crossmat * C);
