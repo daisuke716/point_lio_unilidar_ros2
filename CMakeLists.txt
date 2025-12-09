@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.8)
-project(point_lio_unilidar)
+project(point_lio_unilidar_ros2)
 
 # 编译优化
 set(CMAKE_CXX_STANDARD 14)

@@ -84,18 +84,18 @@ catkin_make
 
 ## 4. Build
 
-Clone this repository and run `catkin_make`:
+Clone this repository and run `colcon build`:
 
 ```
-mkdir -p catkin_point_lio_unilidar/src
+mkdir -p unitree_ros_ws/src
 
-cd catkin_point_lio_unilidar/src
+cd unitree_ros_ws/src
 
-git clone https://github.com/unitreerobotics/point_lio_unilidar.git
+git clone https://github.com/daisuke716/point_lio_unilidar_ros2
 
 cd ..
 
-catkin_make
+colcon build --packages-select point_lio_unilidar_ros2
 ```
 
 
@@ -116,11 +116,11 @@ roslaunch unitree_lidar_ros run_without_rviz.launch
 
 Run `Point-LIO`:
 ```
-cd point_lio_unilidar
+cd unitree_ros_ws
 
 source install/setup.bash
 
-ros2 launch point_lio_unilidar mapping_unilidar_l1.launch.py
+ros2 launch point_lio_unilidar_ros2 mapping_unilidar_l1.launch.py
 ```
 
 

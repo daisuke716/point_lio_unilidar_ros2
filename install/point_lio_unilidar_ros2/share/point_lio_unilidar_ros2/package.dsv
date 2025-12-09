@@ -1,0 +1,6 @@
+source;share/point_lio_unilidar_ros2/hook/cmake_prefix_path.dsv
+source;share/point_lio_unilidar_ros2/hook/cmake_prefix_path.sh
+source;share/point_lio_unilidar_ros2/local_setup.bash
+source;share/point_lio_unilidar_ros2/local_setup.dsv
+source;share/point_lio_unilidar_ros2/local_setup.sh
+source;share/point_lio_unilidar_ros2/local_setup.zsh
