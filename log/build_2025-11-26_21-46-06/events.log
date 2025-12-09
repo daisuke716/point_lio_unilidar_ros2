@@ -1,0 +1,351 @@
+[0.000000] (-) TimerEvent: {}
+[0.000340] (point_lio_unilidar) JobQueued: {'identifier': 'point_lio_unilidar', 'dependencies': OrderedDict()}
+[0.000491] (point_lio_unilidar) JobStarted: {'identifier': 'point_lio_unilidar'}
+[0.010454] (point_lio_unilidar) JobProgress: {'identifier': 'point_lio_unilidar', 'progress': 'cmake'}
+[0.011000] (point_lio_unilidar) JobProgress: {'identifier': 'point_lio_unilidar', 'progress': 'build'}
+[0.011509] (point_lio_unilidar) Command: {'cmd': ['/usr/bin/cmake', '--build', '/home/daisuke/unitree_ros_ws/src/point_lio_unilidar/build/point_lio_unilidar', '--', '-j16', '-l16'], 'cwd': '/home/daisuke/unitree_ros_ws/src/point_lio_unilidar/build/point_lio_unilidar', 'env': OrderedDict({'GJS_DEBUG_TOPICS': 'JS ERROR;JS LOG', 'PYTHON_BASIC_REPL': '1', 'LESSOPEN': '| /usr/bin/lesspipe %s', 'USER': 'daisuke', 'XDG_SESSION_TYPE': 'x11', 'GIT_ASKPASS': '/usr/share/code/resources/app/extensions/git/dist/askpass.sh', 'CLUTTER_DISABLE_MIPMAPPED_TEXT': '1', 'SHLVL': '1', 'LD_LIBRARY_PATH': '/home/daisuke/ros2_ws/install/zed_ipc/lib:/home/daisuke/ros2_ws/install/zed_rgb_convert/lib:/home/daisuke/ros2_ws/install/zed_components/lib:/home/daisuke/ros2_ws/install/rviz_plugin_zed_od/lib:/home/daisuke/ros2_ws/install/kobuki_safety_controller/lib:/home/daisuke/ros2_ws/install/kobuki_random_walker/lib:/home/daisuke/ros2_ws/install/kobuki_node/lib:/home/daisuke/ros2_ws/install/kobuki_keyop/lib:/home/daisuke/ros2_ws/install/kobuki_bumper2pc/lib:/home/daisuke/ros2_ws/install/kobuki_auto_docking/lib:/home/daisuke/ros2_ws/install/kobuki_ros_interfaces/lib:/home/daisuke/ros2_ws/install/kobuki_core/lib:/home/daisuke/ros2_ws/install/ecl_streams/lib:/home/daisuke/ros2_ws/install/ecl_ipc/lib:/home/daisuke/ros2_ws/install/ecl_devices/lib:/home/daisuke/ros2_ws/install/ecl_threads/lib:/home/daisuke/ros2_ws/install/ecl_mobile_robot/lib:/home/daisuke/ros2_ws/install/ecl_manipulators/lib:/home/daisuke/ros2_ws/install/ecl_geometry/lib:/home/daisuke/ros2_ws/install/ecl_statistics/lib:/home/daisuke/ros2_ws/install/ecl_linear_algebra/lib:/home/daisuke/ros2_ws/install/ecl_formatters/lib:/home/daisuke/ros2_ws/install/ecl_type_traits/lib:/home/daisuke/ros2_ws/install/ecl_time/lib:/home/daisuke/ros2_ws/install/ecl_time_lite/lib:/home/daisuke/ros2_ws/install/ecl_io/lib:/home/daisuke/ros2_ws/install/ecl_filesystem/lib:/home/daisuke/ros2_ws/install/ecl_exceptions/lib:/home/daisuke/ros2_ws/install/ecl_errors/lib:/home/daisuke/ros2_ws/install/cmd_vel_mux/lib:/usr/local/cuda-12.8/lib64:/opt/ros/jazzy/opt/rviz_ogre_vendor/lib:/opt/ros/jazzy/lib/x86_64-linux-gnu:/opt/ros/jazzy/opt/gz_math_vendor/lib:/opt/ros/jazzy/opt/gz_utils_vendor/lib:/opt/ros/jazzy/opt/gz_cmake_vendor/lib:/opt/ros/jazzy/lib', 'HOME': '/home/daisuke', 'CHROME_DESKTOP': 'code.desktop', 'CONDA_SHLVL': '0', 'TERM_PROGRAM_VERSION': '1.103.2', 'DESKTOP_SESSION': 'ubuntu', 'GIO_LAUNCHED_DESKTOP_FILE': '/usr/share/applications/code.desktop', 'ROS_PYTHON_VERSION': '3', 'GNOME_SHELL_SESSION_MODE': 'ubuntu', 'GTK_MODULES': 'gail:atk-bridge', 'VSCODE_GIT_ASKPASS_MAIN': '/usr/share/code/resources/app/extensions/git/dist/askpass-main.js', 'VSCODE_GIT_ASKPASS_NODE': '/usr/share/code/code', 'MANAGERPID': '76671', 'PYDEVD_DISABLE_FILE_VALIDATION': '1', 'SYSTEMD_EXEC_PID': '77118', 'BUNDLED_DEBUGPY_PATH': '/home/daisuke/.vscode/extensions/ms-python.debugpy-2025.16.0-linux-x64/bundled/libs/debugpy', 'GSM_SKIP_SSH_AGENT_WORKAROUND': 'true', 'DBUS_SESSION_BUS_ADDRESS': 'unix:path=/run/user/1000/bus', 'COLORTERM': 'truecolor', '_CE_M': '', 'GIO_LAUNCHED_DESKTOP_FILE_PID': '79303', 'DEBUGINFOD_URLS': 'https://debuginfod.ubuntu.com', 'COLCON_PREFIX_PATH': '/home/daisuke/ros2_ws/install', 'ROS_DISTRO': 'jazzy', 'GTK_IM_MODULE': 'ibus', 'LOGNAME': 'daisuke', 'JOURNAL_STREAM': '9:417926', '_': '/usr/bin/colcon', 'ROS_VERSION': '2', 'MEMORY_PRESSURE_WATCH': '/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/session.slice/org.gnome.Shell@x11.service/memory.pressure', 'XDG_SESSION_CLASS': 'user', 'USERNAME': 'daisuke', 'TERM': 'xterm-256color', 'GNOME_DESKTOP_SESSION_ID': 'this-is-deprecated', '_CE_CONDA': '', 'WINDOWPATH': '2', 'PATH': '/home/daisuke/ros2_ws/install/kobuki_core/bin:/home/daisuke/ros2_ws/install/ecl_core_apps/bin:/home/daisuke/ros2_ws/install/ecl_type_traits/bin:/home/daisuke/ros2_ws/install/ecl_config/bin:/usr/local/cuda-12.8/bin:/home/daisuke/anaconda3/condabin:/opt/ros/jazzy/bin:/usr/lib/dotnet/dotnet:/home/daisuke/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin:/home/daisuke/.dotnet/tools:/home/daisuke/.vscode/extensions/ms-python.debugpy-2025.16.0-linux-x64/bundled/scripts/noConfigScripts:/home/daisuke/.config/Code/User/globalStorage/github.copilot-chat/debugCommand', 'SESSION_MANAGER': 'local/msi-ubuntu-daisuke:@/tmp/.ICE-unix/77074,unix/msi-ubuntu-daisuke:/tmp/.ICE-unix/77074', 'INVOCATION_ID': '32437eaab1544177986380b73c48cba9', 'XDG_MENU_PREFIX': 'gnome-', 'XDG_RUNTIME_DIR': '/run/user/1000', 'GDK_BACKEND': 'x11', 'DISPLAY': ':1', 'VSCODE_DEBUGPY_ADAPTER_ENDPOINTS': '/home/daisuke/.vscode/extensions/ms-python.debugpy-2025.16.0-linux-x64/.noConfigDebugAdapterEndpoints/endpoint-7faa890f81803ca7.txt', 'LANG': 'en_US.UTF-8', 'XDG_CURRENT_DESKTOP': 'Unity', 'PYTHONSTARTUP': '/home/daisuke/.config/Code/User/workspaceStorage/d22f43a17ebe2f6032c59d797f874767/ms-python.python/pythonrc.py', 'DOTNET_BUNDLE_EXTRACT_BASE_DIR': '/home/daisuke/.cache/dotnet_bundle_extract', 'XMODIFIERS': '@im=ibus', 'XDG_SESSION_DESKTOP': 'ubuntu', 'XAUTHORITY': '/run/user/1000/gdm/Xauthority', 'LS_COLORS': 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=00:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.avif=01;35:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:*~=00;90:*#=00;90:*.bak=00;90:*.crdownload=00;90:*.dpkg-dist=00;90:*.dpkg-new=00;90:*.dpkg-old=00;90:*.dpkg-tmp=00;90:*.old=00;90:*.orig=00;90:*.part=00;90:*.rej=00;90:*.rpmnew=00;90:*.rpmorig=00;90:*.rpmsave=00;90:*.swp=00;90:*.tmp=00;90:*.ucf-dist=00;90:*.ucf-new=00;90:*.ucf-old=00;90:', 'VSCODE_GIT_IPC_HANDLE': '/run/user/1000/vscode-git-d18ca81326.sock', 'TERM_PROGRAM': 'vscode', 'SSH_AUTH_SOCK': '/run/user/1000/keyring/ssh', 'ROS_DOMAIN_ID': '0', 'AMENT_PREFIX_PATH': '/home/daisuke/ros2_ws/install/zed_ros2:/home/daisuke/ros2_ws/install/zed_robot_integration:/home/daisuke/ros2_ws/install/zed_ipc:/home/daisuke/ros2_ws/install/zed_multi_camera:/home/daisuke/ros2_ws/install/zed_display_rviz2:/home/daisuke/ros2_ws/install/zed_depth_to_laserscan:/home/daisuke/ros2_ws/install/zed_wrapper:/home/daisuke/ros2_ws/install/zed_tutorial_video:/home/daisuke/ros2_ws/install/zed_tutorial_pos_tracking:/home/daisuke/ros2_ws/install/zed_tutorial_depth:/home/daisuke/ros2_ws/install/zed_topic_benchmark_interfaces:/home/daisuke/ros2_ws/install/zed_rgb_convert:/home/daisuke/ros2_ws/install/zed_aruco_localization:/home/daisuke/ros2_ws/install/zed_components:/home/daisuke/ros2_ws/install/rviz_plugin_zed_od:/home/daisuke/ros2_ws/install/kobuki_ros:/home/daisuke/ros2_ws/install/kobuki_safety_controller:/home/daisuke/ros2_ws/install/kobuki_random_walker:/home/daisuke/ros2_ws/install/kobuki_node:/home/daisuke/ros2_ws/install/kobuki_keyop:/home/daisuke/ros2_ws/install/kobuki_bumper2pc:/home/daisuke/ros2_ws/install/kobuki_auto_docking:/home/daisuke/ros2_ws/install/kobuki_ros_interfaces:/home/daisuke/ros2_ws/install/kobuki_description:/home/daisuke/ros2_ws/install/kobuki_core:/home/daisuke/ros2_ws/install/ekf:/home/daisuke/ros2_ws/install/ecl_core:/home/daisuke/ros2_ws/install/ecl_core_apps:/home/daisuke/ros2_ws/install/ecl_streams:/home/daisuke/ros2_ws/install/ecl_sigslots:/home/daisuke/ros2_ws/install/ecl_ipc:/home/daisuke/ros2_ws/install/ecl_devices:/home/daisuke/ros2_ws/install/ecl_threads:/home/daisuke/ros2_ws/install/ecl_mobile_robot:/home/daisuke/ros2_ws/install/ecl_manipulators:/home/daisuke/ros2_ws/install/ecl_geometry:/home/daisuke/ros2_ws/install/ecl_containers:/home/daisuke/ros2_ws/install/ecl_utilities:/home/daisuke/ros2_ws/install/ecl_statistics:/home/daisuke/ros2_ws/install/ecl_linear_algebra:/home/daisuke/ros2_ws/install/ecl_math:/home/daisuke/ros2_ws/install/ecl_formatters:/home/daisuke/ros2_ws/install/ecl_converters:/home/daisuke/ros2_ws/install/ecl_concepts:/home/daisuke/ros2_ws/install/ecl_type_traits:/home/daisuke/ros2_ws/install/ecl_time:/home/daisuke/ros2_ws/install/ecl_lite:/home/daisuke/ros2_ws/install/ecl_time_lite:/home/daisuke/ros2_ws/install/ecl_sigslots_lite:/home/daisuke/ros2_ws/install/ecl_mpl:/home/daisuke/ros2_ws/install/ecl_io:/home/daisuke/ros2_ws/install/ecl_filesystem:/home/daisuke/ros2_ws/install/ecl_exceptions:/home/daisuke/ros2_ws/install/ecl_errors:/home/daisuke/ros2_ws/install/ecl_eigen:/home/daisuke/ros2_ws/install/ecl_converters_lite:/home/daisuke/ros2_ws/install/ecl_console:/home/daisuke/ros2_ws/install/ecl_config:/home/daisuke/ros2_ws/install/ecl_command_line:/home/daisuke/ros2_ws/install/cmd_vel_mux:/opt/ros/jazzy', 'CONDA_PYTHON_EXE': '/home/daisuke/anaconda3/bin/python', 'ORIGINAL_XDG_CURRENT_DESKTOP': 'ubuntu:GNOME', 'SHELL': '/bin/bash', 'QT_ACCESSIBILITY': '1', 'GDMSESSION': 'ubuntu', 'LESSCLOSE': '/usr/bin/lesspipe %s %s', 'GPG_AGENT_INFO': '/run/user/1000/gnupg/S.gpg-agent:0:1', 'GJS_DEBUG_OUTPUT': 'stderr', 'ROS_AUTOMATIC_DISCOVERY_RANGE': 'SUBNET', 'VSCODE_GIT_ASKPASS_EXTRA_ARGS': '', 'GIT_PAGER': 'cat', 'QT_IM_MODULE': 'ibus', 'PWD': '/home/daisuke/unitree_ros_ws/src/point_lio_unilidar/build/point_lio_unilidar', 'XDG_CONFIG_DIRS': '/etc/xdg/xdg-ubuntu:/etc/xdg', 'CONDA_EXE': '/home/daisuke/anaconda3/bin/conda', 'XDG_DATA_DIRS': '/usr/share/ubuntu:/usr/share/gnome:/home/daisuke/.local/share/flatpak/exports/share:/var/lib/flatpak/exports/share:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop', 'PYTHONPATH': '/home/daisuke/ros2_ws/install/kobuki_ros_interfaces/lib/python3.12/site-packages:/opt/ros/jazzy/lib/python3.12/site-packages', 'COLCON': '1', 'MEMORY_PRESSURE_WRITE': 'c29tZSAyMDAwMDAgMjAwMDAwMAA=', 'CMAKE_PREFIX_PATH': '/home/daisuke/ros2_ws/install/zed_ros2:/home/daisuke/ros2_ws/install/zed_robot_integration:/home/daisuke/ros2_ws/install/zed_ipc:/home/daisuke/ros2_ws/install/zed_multi_camera:/home/daisuke/ros2_ws/install/zed_display_rviz2:/home/daisuke/ros2_ws/install/zed_depth_to_laserscan:/home/daisuke/ros2_ws/install/zed_wrapper:/home/daisuke/ros2_ws/install/zed_tutorial_video:/home/daisuke/ros2_ws/install/zed_tutorial_pos_tracking:/home/daisuke/ros2_ws/install/zed_tutorial_depth:/home/daisuke/ros2_ws/install/zed_topic_benchmark_interfaces:/home/daisuke/ros2_ws/install/zed_rgb_convert:/home/daisuke/ros2_ws/install/zed_aruco_localization:/home/daisuke/ros2_ws/install/zed_components:/home/daisuke/ros2_ws/install/rviz_plugin_zed_od:/home/daisuke/ros2_ws/install/kobuki_ros:/home/daisuke/ros2_ws/install/kobuki_safety_controller:/home/daisuke/ros2_ws/install/kobuki_random_walker:/home/daisuke/ros2_ws/install/kobuki_node:/home/daisuke/ros2_ws/install/kobuki_keyop:/home/daisuke/ros2_ws/install/kobuki_bumper2pc:/home/daisuke/ros2_ws/install/kobuki_auto_docking:/home/daisuke/ros2_ws/install/kobuki_ros_interfaces:/home/daisuke/ros2_ws/install/kobuki_description:/home/daisuke/ros2_ws/install/kobuki_core:/opt/ros/jazzy:/home/daisuke/ros2_ws/install/ekf:/home/daisuke/ros2_ws/install/ecl_core:/home/daisuke/ros2_ws/install/ecl_core_apps:/home/daisuke/ros2_ws/install/ecl_streams:/home/daisuke/ros2_ws/install/ecl_sigslots:/home/daisuke/ros2_ws/install/ecl_ipc:/home/daisuke/ros2_ws/install/ecl_devices:/home/daisuke/ros2_ws/install/ecl_threads:/home/daisuke/ros2_ws/install/ecl_mobile_robot:/home/daisuke/ros2_ws/install/ecl_manipulators:/home/daisuke/ros2_ws/install/ecl_geometry:/home/daisuke/ros2_ws/install/ecl_containers:/home/daisuke/ros2_ws/install/ecl_utilities:/home/daisuke/ros2_ws/install/ecl_statistics:/home/daisuke/ros2_ws/install/ecl_linear_algebra:/home/daisuke/ros2_ws/install/ecl_math:/home/daisuke/ros2_ws/install/ecl_formatters:/home/daisuke/ros2_ws/install/ecl_converters:/home/daisuke/ros2_ws/install/ecl_concepts:/home/daisuke/ros2_ws/install/ecl_type_traits:/home/daisuke/ros2_ws/install/ecl_time:/home/daisuke/ros2_ws/install/ecl_lite:/home/daisuke/ros2_ws/install/ecl_time_lite:/home/daisuke/ros2_ws/install/ecl_sigslots_lite:/home/daisuke/ros2_ws/install/ecl_mpl:/home/daisuke/ros2_ws/install/ecl_io:/home/daisuke/ros2_ws/install/ecl_filesystem:/home/daisuke/ros2_ws/install/ecl_exceptions:/home/daisuke/ros2_ws/install/ecl_errors:/home/daisuke/ros2_ws/install/ecl_eigen:/home/daisuke/ros2_ws/install/ecl_converters_lite:/home/daisuke/ros2_ws/install/ecl_console:/home/daisuke/ros2_ws/install/ecl_config:/home/daisuke/ros2_ws/install/ecl_command_line:/home/daisuke/ros2_ws/install/cmd_vel_mux:/opt/ros/jazzy/opt/gz_math_vendor:/opt/ros/jazzy/opt/gz_utils_vendor:/opt/ros/jazzy/opt/gz_cmake_vendor'}), 'shell': False}
+[0.099894] (-) TimerEvent: {}
+[0.100303] (point_lio_unilidar) StdoutLine: {'line': b'[ 16%] \x1b[32mBuilding CXX object CMakeFiles/pointlio_mapping.dir/src/laserMapping.cpp.o\x1b[0m\n'}
+[0.200020] (-) TimerEvent: {}
+[0.300306] (-) TimerEvent: {}
+[0.400581] (-) TimerEvent: {}
+[0.500955] (-) TimerEvent: {}
+[0.601220] (-) TimerEvent: {}
+[0.701556] (-) TimerEvent: {}
+[0.801906] (-) TimerEvent: {}
+[0.902190] (-) TimerEvent: {}
+[1.002482] (-) TimerEvent: {}
+[1.102731] (-) TimerEvent: {}
+[1.202990] (-) TimerEvent: {}
+[1.303342] (-) TimerEvent: {}
+[1.403593] (-) TimerEvent: {}
+[1.503848] (-) TimerEvent: {}
+[1.604142] (-) TimerEvent: {}
+[1.704475] (-) TimerEvent: {}
+[1.804804] (-) TimerEvent: {}
+[1.905149] (-) TimerEvent: {}
+[2.005473] (-) TimerEvent: {}
+[2.105774] (-) TimerEvent: {}
+[2.206067] (-) TimerEvent: {}
+[2.306387] (-) TimerEvent: {}
+[2.406708] (-) TimerEvent: {}
+[2.507007] (-) TimerEvent: {}
+[2.607312] (-) TimerEvent: {}
+[2.707615] (-) TimerEvent: {}
+[2.807889] (-) TimerEvent: {}
+[2.908145] (-) TimerEvent: {}
+[3.008398] (-) TimerEvent: {}
+[3.108608] (-) TimerEvent: {}
+[3.208857] (-) TimerEvent: {}
+[3.309073] (-) TimerEvent: {}
+[3.409314] (-) TimerEvent: {}
+[3.509574] (-) TimerEvent: {}
+[3.609793] (-) TimerEvent: {}
+[3.709994] (-) TimerEvent: {}
+[3.810239] (-) TimerEvent: {}
+[3.908768] (point_lio_unilidar) StderrLine: {'line': b'In file included from \x1b[01m\x1b[K/usr/include/boost/bind/detail/requires_cxx11.hpp:9\x1b[m\x1b[K,\n'}
+[3.908939] (point_lio_unilidar) StderrLine: {'line': b'                 from \x1b[01m\x1b[K/usr/include/boost/bind/bind.hpp:24\x1b[m\x1b[K,\n'}
+[3.909004] (point_lio_unilidar) StderrLine: {'line': b'                 from \x1b[01m\x1b[K/usr/include/boost/bind.hpp:29\x1b[m\x1b[K,\n'}
+[3.909045] (point_lio_unilidar) StderrLine: {'line': b'                 from \x1b[01m\x1b[K/home/daisuke/unitree_ros_ws/src/point_lio_unilidar/include/../include/IKFoM/IKFoM_toolkit/esekfom/esekfom.hpp:42\x1b[m\x1b[K,\n'}
+[3.909077] (point_lio_unilidar) StderrLine: {'line': b'                 from \x1b[01m\x1b[K/home/daisuke/unitree_ros_ws/src/point_lio_unilidar/src/Estimator.h:4\x1b[m\x1b[K,\n'}
+[3.909107] (point_lio_unilidar) StderrLine: {'line': b'                 from \x1b[01m\x1b[K/home/daisuke/unitree_ros_ws/src/point_lio_unilidar/src/laserMapping.cpp:36\x1b[m\x1b[K:\n'}
+[3.909140] (point_lio_unilidar) StderrLine: {'line': b'\x1b[01m\x1b[K/usr/include/boost/bind.hpp:36:1:\x1b[m\x1b[K \x1b[01;36m\x1b[Knote: \x1b[m\x1b[K\xe2\x80\x98\x1b[01m\x1b[K#pragma message: The practice of declaring the Bind placeholders (_1, _2, ...) in the global namespace is deprecated. Please use <boost/bind/bind.hpp> + using namespace boost::placeholders, or define BOOST_BIND_GLOBAL_PLACEHOLDERS to retain the current behavior.\x1b[m\x1b[K\xe2\x80\x99\n'}
+[3.909176] (point_lio_unilidar) StderrLine: {'line': b'   36 | \x1b[01;36m\x1b[KBOOST_PRAGMA_MESSAGE\x1b[m\x1b[K(\n'}
+[3.909206] (point_lio_unilidar) StderrLine: {'line': b'      | \x1b[01;36m\x1b[K^~~~~~~~~~~~~~~~~~~~\x1b[m\x1b[K\n'}
+[3.910343] (-) TimerEvent: {}
+[4.010503] (-) TimerEvent: {}
+[4.110709] (-) TimerEvent: {}
+[4.211008] (-) TimerEvent: {}
+[4.311236] (-) TimerEvent: {}
+[4.411485] (-) TimerEvent: {}
+[4.511737] (-) TimerEvent: {}
+[4.611929] (-) TimerEvent: {}
+[4.712157] (-) TimerEvent: {}
+[4.812424] (-) TimerEvent: {}
+[4.912684] (-) TimerEvent: {}
+[5.012897] (-) TimerEvent: {}
+[5.113093] (-) TimerEvent: {}
+[5.213330] (-) TimerEvent: {}
+[5.313563] (-) TimerEvent: {}
+[5.413803] (-) TimerEvent: {}
+[5.514031] (-) TimerEvent: {}
+[5.614324] (-) TimerEvent: {}
+[5.714555] (-) TimerEvent: {}
+[5.814772] (-) TimerEvent: {}
+[5.915035] (-) TimerEvent: {}
+[6.015286] (-) TimerEvent: {}
+[6.115565] (-) TimerEvent: {}
+[6.215864] (-) TimerEvent: {}
+[6.316096] (-) TimerEvent: {}
+[6.416295] (-) TimerEvent: {}
+[6.516499] (-) TimerEvent: {}
+[6.616734] (-) TimerEvent: {}
+[6.717000] (-) TimerEvent: {}
+[6.817221] (-) TimerEvent: {}
+[6.917458] (-) TimerEvent: {}
+[7.017685] (-) TimerEvent: {}
+[7.117951] (-) TimerEvent: {}
+[7.218189] (-) TimerEvent: {}
+[7.318449] (-) TimerEvent: {}
+[7.418657] (-) TimerEvent: {}
+[7.518932] (-) TimerEvent: {}
+[7.619152] (-) TimerEvent: {}
+[7.719386] (-) TimerEvent: {}
+[7.819631] (-) TimerEvent: {}
+[7.919824] (-) TimerEvent: {}
+[8.020030] (-) TimerEvent: {}
+[8.120225] (-) TimerEvent: {}
+[8.220573] (-) TimerEvent: {}
+[8.320897] (-) TimerEvent: {}
+[8.421132] (-) TimerEvent: {}
+[8.521417] (-) TimerEvent: {}
+[8.621686] (-) TimerEvent: {}
+[8.721923] (-) TimerEvent: {}
+[8.822158] (-) TimerEvent: {}
+[8.922423] (-) TimerEvent: {}
+[9.022691] (-) TimerEvent: {}
+[9.122912] (-) TimerEvent: {}
+[9.223159] (-) TimerEvent: {}
+[9.323420] (-) TimerEvent: {}
+[9.423657] (-) TimerEvent: {}
+[9.523879] (-) TimerEvent: {}
+[9.624081] (-) TimerEvent: {}
+[9.724332] (-) TimerEvent: {}
+[9.824557] (-) TimerEvent: {}
+[9.924853] (-) TimerEvent: {}
+[10.025092] (-) TimerEvent: {}
+[10.125347] (-) TimerEvent: {}
+[10.225630] (-) TimerEvent: {}
+[10.325851] (-) TimerEvent: {}
+[10.426068] (-) TimerEvent: {}
+[10.526281] (-) TimerEvent: {}
+[10.626527] (-) TimerEvent: {}
+[10.726738] (-) TimerEvent: {}
+[10.826915] (-) TimerEvent: {}
+[10.927112] (-) TimerEvent: {}
+[11.027367] (-) TimerEvent: {}
+[11.127664] (-) TimerEvent: {}
+[11.227876] (-) TimerEvent: {}
+[11.328112] (-) TimerEvent: {}
+[11.428419] (-) TimerEvent: {}
+[11.528711] (-) TimerEvent: {}
+[11.629100] (-) TimerEvent: {}
+[11.729380] (-) TimerEvent: {}
+[11.829661] (-) TimerEvent: {}
+[11.929897] (-) TimerEvent: {}
+[12.030122] (-) TimerEvent: {}
+[12.130388] (-) TimerEvent: {}
+[12.230669] (-) TimerEvent: {}
+[12.330923] (-) TimerEvent: {}
+[12.431151] (-) TimerEvent: {}
+[12.531382] (-) TimerEvent: {}
+[12.631687] (-) TimerEvent: {}
+[12.732019] (-) TimerEvent: {}
+[12.832232] (-) TimerEvent: {}
+[12.932460] (-) TimerEvent: {}
+[13.032650] (-) TimerEvent: {}
+[13.132880] (-) TimerEvent: {}
+[13.233079] (-) TimerEvent: {}
+[13.333430] (-) TimerEvent: {}
+[13.433762] (-) TimerEvent: {}
+[13.534026] (-) TimerEvent: {}
+[13.634261] (-) TimerEvent: {}
+[13.734508] (-) TimerEvent: {}
+[13.834776] (-) TimerEvent: {}
+[13.935008] (-) TimerEvent: {}
+[14.035255] (-) TimerEvent: {}
+[14.135504] (-) TimerEvent: {}
+[14.235758] (-) TimerEvent: {}
+[14.335960] (-) TimerEvent: {}
+[14.436174] (-) TimerEvent: {}
+[14.536502] (-) TimerEvent: {}
+[14.636743] (-) TimerEvent: {}
+[14.737019] (-) TimerEvent: {}
+[14.837334] (-) TimerEvent: {}
+[14.937674] (-) TimerEvent: {}
+[15.037972] (-) TimerEvent: {}
+[15.138245] (-) TimerEvent: {}
+[15.238567] (-) TimerEvent: {}
+[15.338893] (-) TimerEvent: {}
+[15.439164] (-) TimerEvent: {}
+[15.539485] (-) TimerEvent: {}
+[15.639744] (-) TimerEvent: {}
+[15.740009] (-) TimerEvent: {}
+[15.840296] (-) TimerEvent: {}
+[15.940589] (-) TimerEvent: {}
+[16.040881] (-) TimerEvent: {}
+[16.141134] (-) TimerEvent: {}
+[16.241436] (-) TimerEvent: {}
+[16.341711] (-) TimerEvent: {}
+[16.441954] (-) TimerEvent: {}
+[16.542192] (-) TimerEvent: {}
+[16.642476] (-) TimerEvent: {}
+[16.742763] (-) TimerEvent: {}
+[16.843005] (-) TimerEvent: {}
+[16.943249] (-) TimerEvent: {}
+[17.043531] (-) TimerEvent: {}
+[17.143783] (-) TimerEvent: {}
+[17.244060] (-) TimerEvent: {}
+[17.344439] (-) TimerEvent: {}
+[17.444783] (-) TimerEvent: {}
+[17.545072] (-) TimerEvent: {}
+[17.645355] (-) TimerEvent: {}
+[17.745662] (-) TimerEvent: {}
+[17.845930] (-) TimerEvent: {}
+[17.946208] (-) TimerEvent: {}
+[18.046522] (-) TimerEvent: {}
+[18.146842] (-) TimerEvent: {}
+[18.247111] (-) TimerEvent: {}
+[18.347356] (-) TimerEvent: {}
+[18.447637] (-) TimerEvent: {}
+[18.547901] (-) TimerEvent: {}
+[18.648118] (-) TimerEvent: {}
+[18.748348] (-) TimerEvent: {}
+[18.848585] (-) TimerEvent: {}
+[18.948778] (-) TimerEvent: {}
+[19.049018] (-) TimerEvent: {}
+[19.149206] (-) TimerEvent: {}
+[19.249423] (-) TimerEvent: {}
+[19.349641] (-) TimerEvent: {}
+[19.449922] (-) TimerEvent: {}
+[19.550144] (-) TimerEvent: {}
+[19.650402] (-) TimerEvent: {}
+[19.750628] (-) TimerEvent: {}
+[19.850891] (-) TimerEvent: {}
+[19.951116] (-) TimerEvent: {}
+[20.051374] (-) TimerEvent: {}
+[20.151622] (-) TimerEvent: {}
+[20.251876] (-) TimerEvent: {}
+[20.352181] (-) TimerEvent: {}
+[20.452370] (-) TimerEvent: {}
+[20.552610] (-) TimerEvent: {}
+[20.652853] (-) TimerEvent: {}
+[20.753063] (-) TimerEvent: {}
+[20.853293] (-) TimerEvent: {}
+[20.953532] (-) TimerEvent: {}
+[21.053778] (-) TimerEvent: {}
+[21.153992] (-) TimerEvent: {}
+[21.254221] (-) TimerEvent: {}
+[21.354461] (-) TimerEvent: {}
+[21.454742] (-) TimerEvent: {}
+[21.554970] (-) TimerEvent: {}
+[21.655175] (-) TimerEvent: {}
+[21.755476] (-) TimerEvent: {}
+[21.855753] (-) TimerEvent: {}
+[21.955975] (-) TimerEvent: {}
+[22.056262] (-) TimerEvent: {}
+[22.156478] (-) TimerEvent: {}
+[22.256732] (-) TimerEvent: {}
+[22.356968] (-) TimerEvent: {}
+[22.457198] (-) TimerEvent: {}
+[22.557498] (-) TimerEvent: {}
+[22.657740] (-) TimerEvent: {}
+[22.758006] (-) TimerEvent: {}
+[22.858231] (-) TimerEvent: {}
+[22.958503] (-) TimerEvent: {}
+[23.058739] (-) TimerEvent: {}
+[23.158948] (-) TimerEvent: {}
+[23.259139] (-) TimerEvent: {}
+[23.359362] (-) TimerEvent: {}
+[23.459655] (-) TimerEvent: {}
+[23.559930] (-) TimerEvent: {}
+[23.660174] (-) TimerEvent: {}
+[23.760435] (-) TimerEvent: {}
+[23.860706] (-) TimerEvent: {}
+[23.960986] (-) TimerEvent: {}
+[24.061249] (-) TimerEvent: {}
+[24.161567] (-) TimerEvent: {}
+[24.261836] (-) TimerEvent: {}
+[24.362070] (-) TimerEvent: {}
+[24.462268] (-) TimerEvent: {}
+[24.562510] (-) TimerEvent: {}
+[24.662754] (-) TimerEvent: {}
+[24.762984] (-) TimerEvent: {}
+[24.863237] (-) TimerEvent: {}
+[24.963483] (-) TimerEvent: {}
+[25.063750] (-) TimerEvent: {}
+[25.163983] (-) TimerEvent: {}
+[25.264176] (-) TimerEvent: {}
+[25.364399] (-) TimerEvent: {}
+[25.464670] (-) TimerEvent: {}
+[25.564887] (-) TimerEvent: {}
+[25.665080] (-) TimerEvent: {}
+[25.765301] (-) TimerEvent: {}
+[25.865529] (-) TimerEvent: {}
+[25.965750] (-) TimerEvent: {}
+[26.065947] (-) TimerEvent: {}
+[26.166144] (-) TimerEvent: {}
+[26.266394] (-) TimerEvent: {}
+[26.366599] (-) TimerEvent: {}
+[26.466822] (-) TimerEvent: {}
+[26.567035] (-) TimerEvent: {}
+[26.667271] (-) TimerEvent: {}
+[26.767510] (-) TimerEvent: {}
+[26.867698] (-) TimerEvent: {}
+[26.967933] (-) TimerEvent: {}
+[27.068137] (-) TimerEvent: {}
+[27.168412] (-) TimerEvent: {}
+[27.268648] (-) TimerEvent: {}
+[27.368913] (-) TimerEvent: {}
+[27.469168] (-) TimerEvent: {}
+[27.569387] (-) TimerEvent: {}
+[27.669614] (-) TimerEvent: {}
+[27.769859] (-) TimerEvent: {}
+[27.819809] (point_lio_unilidar) StdoutLine: {'line': b'[ 33%] \x1b[32m\x1b[1mLinking CXX executable pointlio_mapping\x1b[0m\n'}
+[27.869954] (-) TimerEvent: {}
+[27.970168] (-) TimerEvent: {}
+[28.070370] (-) TimerEvent: {}
+[28.170601] (-) TimerEvent: {}
+[28.270806] (-) TimerEvent: {}
+[28.371122] (-) TimerEvent: {}
+[28.471441] (-) TimerEvent: {}
+[28.571792] (-) TimerEvent: {}
+[28.672056] (-) TimerEvent: {}
+[28.719290] (point_lio_unilidar) StdoutLine: {'line': b'[100%] Built target pointlio_mapping\n'}
+[28.729420] (point_lio_unilidar) CommandEnded: {'returncode': 0}
+[28.729876] (point_lio_unilidar) JobProgress: {'identifier': 'point_lio_unilidar', 'progress': 'install'}
+[28.736549] (point_lio_unilidar) Command: {'cmd': ['/usr/bin/cmake', '--install', '/home/daisuke/unitree_ros_ws/src/point_lio_unilidar/build/point_lio_unilidar'], 'cwd': '/home/daisuke/unitree_ros_ws/src/point_lio_unilidar/build/point_lio_unilidar', 'env': OrderedDict({'GJS_DEBUG_TOPICS': 'JS ERROR;JS LOG', 'PYTHON_BASIC_REPL': '1', 'LESSOPEN': '| /usr/bin/lesspipe %s', 'USER': 'daisuke', 'XDG_SESSION_TYPE': 'x11', 'GIT_ASKPASS': '/usr/share/code/resources/app/extensions/git/dist/askpass.sh', 'CLUTTER_DISABLE_MIPMAPPED_TEXT': '1', 'SHLVL': '1', 'LD_LIBRARY_PATH': '/home/daisuke/ros2_ws/install/zed_ipc/lib:/home/daisuke/ros2_ws/install/zed_rgb_convert/lib:/home/daisuke/ros2_ws/install/zed_components/lib:/home/daisuke/ros2_ws/install/rviz_plugin_zed_od/lib:/home/daisuke/ros2_ws/install/kobuki_safety_controller/lib:/home/daisuke/ros2_ws/install/kobuki_random_walker/lib:/home/daisuke/ros2_ws/install/kobuki_node/lib:/home/daisuke/ros2_ws/install/kobuki_keyop/lib:/home/daisuke/ros2_ws/install/kobuki_bumper2pc/lib:/home/daisuke/ros2_ws/install/kobuki_auto_docking/lib:/home/daisuke/ros2_ws/install/kobuki_ros_interfaces/lib:/home/daisuke/ros2_ws/install/kobuki_core/lib:/home/daisuke/ros2_ws/install/ecl_streams/lib:/home/daisuke/ros2_ws/install/ecl_ipc/lib:/home/daisuke/ros2_ws/install/ecl_devices/lib:/home/daisuke/ros2_ws/install/ecl_threads/lib:/home/daisuke/ros2_ws/install/ecl_mobile_robot/lib:/home/daisuke/ros2_ws/install/ecl_manipulators/lib:/home/daisuke/ros2_ws/install/ecl_geometry/lib:/home/daisuke/ros2_ws/install/ecl_statistics/lib:/home/daisuke/ros2_ws/install/ecl_linear_algebra/lib:/home/daisuke/ros2_ws/install/ecl_formatters/lib:/home/daisuke/ros2_ws/install/ecl_type_traits/lib:/home/daisuke/ros2_ws/install/ecl_time/lib:/home/daisuke/ros2_ws/install/ecl_time_lite/lib:/home/daisuke/ros2_ws/install/ecl_io/lib:/home/daisuke/ros2_ws/install/ecl_filesystem/lib:/home/daisuke/ros2_ws/install/ecl_exceptions/lib:/home/daisuke/ros2_ws/install/ecl_errors/lib:/home/daisuke/ros2_ws/install/cmd_vel_mux/lib:/usr/local/cuda-12.8/lib64:/opt/ros/jazzy/opt/rviz_ogre_vendor/lib:/opt/ros/jazzy/lib/x86_64-linux-gnu:/opt/ros/jazzy/opt/gz_math_vendor/lib:/opt/ros/jazzy/opt/gz_utils_vendor/lib:/opt/ros/jazzy/opt/gz_cmake_vendor/lib:/opt/ros/jazzy/lib', 'HOME': '/home/daisuke', 'CHROME_DESKTOP': 'code.desktop', 'CONDA_SHLVL': '0', 'TERM_PROGRAM_VERSION': '1.103.2', 'DESKTOP_SESSION': 'ubuntu', 'GIO_LAUNCHED_DESKTOP_FILE': '/usr/share/applications/code.desktop', 'ROS_PYTHON_VERSION': '3', 'GNOME_SHELL_SESSION_MODE': 'ubuntu', 'GTK_MODULES': 'gail:atk-bridge', 'VSCODE_GIT_ASKPASS_MAIN': '/usr/share/code/resources/app/extensions/git/dist/askpass-main.js', 'VSCODE_GIT_ASKPASS_NODE': '/usr/share/code/code', 'MANAGERPID': '76671', 'PYDEVD_DISABLE_FILE_VALIDATION': '1', 'SYSTEMD_EXEC_PID': '77118', 'BUNDLED_DEBUGPY_PATH': '/home/daisuke/.vscode/extensions/ms-python.debugpy-2025.16.0-linux-x64/bundled/libs/debugpy', 'GSM_SKIP_SSH_AGENT_WORKAROUND': 'true', 'DBUS_SESSION_BUS_ADDRESS': 'unix:path=/run/user/1000/bus', 'COLORTERM': 'truecolor', '_CE_M': '', 'GIO_LAUNCHED_DESKTOP_FILE_PID': '79303', 'DEBUGINFOD_URLS': 'https://debuginfod.ubuntu.com', 'COLCON_PREFIX_PATH': '/home/daisuke/ros2_ws/install', 'ROS_DISTRO': 'jazzy', 'GTK_IM_MODULE': 'ibus', 'LOGNAME': 'daisuke', 'JOURNAL_STREAM': '9:417926', '_': '/usr/bin/colcon', 'ROS_VERSION': '2', 'MEMORY_PRESSURE_WATCH': '/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/session.slice/org.gnome.Shell@x11.service/memory.pressure', 'XDG_SESSION_CLASS': 'user', 'USERNAME': 'daisuke', 'TERM': 'xterm-256color', 'GNOME_DESKTOP_SESSION_ID': 'this-is-deprecated', '_CE_CONDA': '', 'WINDOWPATH': '2', 'PATH': '/home/daisuke/ros2_ws/install/kobuki_core/bin:/home/daisuke/ros2_ws/install/ecl_core_apps/bin:/home/daisuke/ros2_ws/install/ecl_type_traits/bin:/home/daisuke/ros2_ws/install/ecl_config/bin:/usr/local/cuda-12.8/bin:/home/daisuke/anaconda3/condabin:/opt/ros/jazzy/bin:/usr/lib/dotnet/dotnet:/home/daisuke/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin:/home/daisuke/.dotnet/tools:/home/daisuke/.vscode/extensions/ms-python.debugpy-2025.16.0-linux-x64/bundled/scripts/noConfigScripts:/home/daisuke/.config/Code/User/globalStorage/github.copilot-chat/debugCommand', 'SESSION_MANAGER': 'local/msi-ubuntu-daisuke:@/tmp/.ICE-unix/77074,unix/msi-ubuntu-daisuke:/tmp/.ICE-unix/77074', 'INVOCATION_ID': '32437eaab1544177986380b73c48cba9', 'XDG_MENU_PREFIX': 'gnome-', 'XDG_RUNTIME_DIR': '/run/user/1000', 'GDK_BACKEND': 'x11', 'DISPLAY': ':1', 'VSCODE_DEBUGPY_ADAPTER_ENDPOINTS': '/home/daisuke/.vscode/extensions/ms-python.debugpy-2025.16.0-linux-x64/.noConfigDebugAdapterEndpoints/endpoint-7faa890f81803ca7.txt', 'LANG': 'en_US.UTF-8', 'XDG_CURRENT_DESKTOP': 'Unity', 'PYTHONSTARTUP': '/home/daisuke/.config/Code/User/workspaceStorage/d22f43a17ebe2f6032c59d797f874767/ms-python.python/pythonrc.py', 'DOTNET_BUNDLE_EXTRACT_BASE_DIR': '/home/daisuke/.cache/dotnet_bundle_extract', 'XMODIFIERS': '@im=ibus', 'XDG_SESSION_DESKTOP': 'ubuntu', 'XAUTHORITY': '/run/user/1000/gdm/Xauthority', 'LS_COLORS': 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=00:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.avif=01;35:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:*~=00;90:*#=00;90:*.bak=00;90:*.crdownload=00;90:*.dpkg-dist=00;90:*.dpkg-new=00;90:*.dpkg-old=00;90:*.dpkg-tmp=00;90:*.old=00;90:*.orig=00;90:*.part=00;90:*.rej=00;90:*.rpmnew=00;90:*.rpmorig=00;90:*.rpmsave=00;90:*.swp=00;90:*.tmp=00;90:*.ucf-dist=00;90:*.ucf-new=00;90:*.ucf-old=00;90:', 'VSCODE_GIT_IPC_HANDLE': '/run/user/1000/vscode-git-d18ca81326.sock', 'TERM_PROGRAM': 'vscode', 'SSH_AUTH_SOCK': '/run/user/1000/keyring/ssh', 'ROS_DOMAIN_ID': '0', 'AMENT_PREFIX_PATH': '/home/daisuke/ros2_ws/install/zed_ros2:/home/daisuke/ros2_ws/install/zed_robot_integration:/home/daisuke/ros2_ws/install/zed_ipc:/home/daisuke/ros2_ws/install/zed_multi_camera:/home/daisuke/ros2_ws/install/zed_display_rviz2:/home/daisuke/ros2_ws/install/zed_depth_to_laserscan:/home/daisuke/ros2_ws/install/zed_wrapper:/home/daisuke/ros2_ws/install/zed_tutorial_video:/home/daisuke/ros2_ws/install/zed_tutorial_pos_tracking:/home/daisuke/ros2_ws/install/zed_tutorial_depth:/home/daisuke/ros2_ws/install/zed_topic_benchmark_interfaces:/home/daisuke/ros2_ws/install/zed_rgb_convert:/home/daisuke/ros2_ws/install/zed_aruco_localization:/home/daisuke/ros2_ws/install/zed_components:/home/daisuke/ros2_ws/install/rviz_plugin_zed_od:/home/daisuke/ros2_ws/install/kobuki_ros:/home/daisuke/ros2_ws/install/kobuki_safety_controller:/home/daisuke/ros2_ws/install/kobuki_random_walker:/home/daisuke/ros2_ws/install/kobuki_node:/home/daisuke/ros2_ws/install/kobuki_keyop:/home/daisuke/ros2_ws/install/kobuki_bumper2pc:/home/daisuke/ros2_ws/install/kobuki_auto_docking:/home/daisuke/ros2_ws/install/kobuki_ros_interfaces:/home/daisuke/ros2_ws/install/kobuki_description:/home/daisuke/ros2_ws/install/kobuki_core:/home/daisuke/ros2_ws/install/ekf:/home/daisuke/ros2_ws/install/ecl_core:/home/daisuke/ros2_ws/install/ecl_core_apps:/home/daisuke/ros2_ws/install/ecl_streams:/home/daisuke/ros2_ws/install/ecl_sigslots:/home/daisuke/ros2_ws/install/ecl_ipc:/home/daisuke/ros2_ws/install/ecl_devices:/home/daisuke/ros2_ws/install/ecl_threads:/home/daisuke/ros2_ws/install/ecl_mobile_robot:/home/daisuke/ros2_ws/install/ecl_manipulators:/home/daisuke/ros2_ws/install/ecl_geometry:/home/daisuke/ros2_ws/install/ecl_containers:/home/daisuke/ros2_ws/install/ecl_utilities:/home/daisuke/ros2_ws/install/ecl_statistics:/home/daisuke/ros2_ws/install/ecl_linear_algebra:/home/daisuke/ros2_ws/install/ecl_math:/home/daisuke/ros2_ws/install/ecl_formatters:/home/daisuke/ros2_ws/install/ecl_converters:/home/daisuke/ros2_ws/install/ecl_concepts:/home/daisuke/ros2_ws/install/ecl_type_traits:/home/daisuke/ros2_ws/install/ecl_time:/home/daisuke/ros2_ws/install/ecl_lite:/home/daisuke/ros2_ws/install/ecl_time_lite:/home/daisuke/ros2_ws/install/ecl_sigslots_lite:/home/daisuke/ros2_ws/install/ecl_mpl:/home/daisuke/ros2_ws/install/ecl_io:/home/daisuke/ros2_ws/install/ecl_filesystem:/home/daisuke/ros2_ws/install/ecl_exceptions:/home/daisuke/ros2_ws/install/ecl_errors:/home/daisuke/ros2_ws/install/ecl_eigen:/home/daisuke/ros2_ws/install/ecl_converters_lite:/home/daisuke/ros2_ws/install/ecl_console:/home/daisuke/ros2_ws/install/ecl_config:/home/daisuke/ros2_ws/install/ecl_command_line:/home/daisuke/ros2_ws/install/cmd_vel_mux:/opt/ros/jazzy', 'CONDA_PYTHON_EXE': '/home/daisuke/anaconda3/bin/python', 'ORIGINAL_XDG_CURRENT_DESKTOP': 'ubuntu:GNOME', 'SHELL': '/bin/bash', 'QT_ACCESSIBILITY': '1', 'GDMSESSION': 'ubuntu', 'LESSCLOSE': '/usr/bin/lesspipe %s %s', 'GPG_AGENT_INFO': '/run/user/1000/gnupg/S.gpg-agent:0:1', 'GJS_DEBUG_OUTPUT': 'stderr', 'ROS_AUTOMATIC_DISCOVERY_RANGE': 'SUBNET', 'VSCODE_GIT_ASKPASS_EXTRA_ARGS': '', 'GIT_PAGER': 'cat', 'QT_IM_MODULE': 'ibus', 'PWD': '/home/daisuke/unitree_ros_ws/src/point_lio_unilidar/build/point_lio_unilidar', 'XDG_CONFIG_DIRS': '/etc/xdg/xdg-ubuntu:/etc/xdg', 'CONDA_EXE': '/home/daisuke/anaconda3/bin/conda', 'XDG_DATA_DIRS': '/usr/share/ubuntu:/usr/share/gnome:/home/daisuke/.local/share/flatpak/exports/share:/var/lib/flatpak/exports/share:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop', 'PYTHONPATH': '/home/daisuke/ros2_ws/install/kobuki_ros_interfaces/lib/python3.12/site-packages:/opt/ros/jazzy/lib/python3.12/site-packages', 'COLCON': '1', 'MEMORY_PRESSURE_WRITE': 'c29tZSAyMDAwMDAgMjAwMDAwMAA=', 'CMAKE_PREFIX_PATH': '/home/daisuke/ros2_ws/install/zed_ros2:/home/daisuke/ros2_ws/install/zed_robot_integration:/home/daisuke/ros2_ws/install/zed_ipc:/home/daisuke/ros2_ws/install/zed_multi_camera:/home/daisuke/ros2_ws/install/zed_display_rviz2:/home/daisuke/ros2_ws/install/zed_depth_to_laserscan:/home/daisuke/ros2_ws/install/zed_wrapper:/home/daisuke/ros2_ws/install/zed_tutorial_video:/home/daisuke/ros2_ws/install/zed_tutorial_pos_tracking:/home/daisuke/ros2_ws/install/zed_tutorial_depth:/home/daisuke/ros2_ws/install/zed_topic_benchmark_interfaces:/home/daisuke/ros2_ws/install/zed_rgb_convert:/home/daisuke/ros2_ws/install/zed_aruco_localization:/home/daisuke/ros2_ws/install/zed_components:/home/daisuke/ros2_ws/install/rviz_plugin_zed_od:/home/daisuke/ros2_ws/install/kobuki_ros:/home/daisuke/ros2_ws/install/kobuki_safety_controller:/home/daisuke/ros2_ws/install/kobuki_random_walker:/home/daisuke/ros2_ws/install/kobuki_node:/home/daisuke/ros2_ws/install/kobuki_keyop:/home/daisuke/ros2_ws/install/kobuki_bumper2pc:/home/daisuke/ros2_ws/install/kobuki_auto_docking:/home/daisuke/ros2_ws/install/kobuki_ros_interfaces:/home/daisuke/ros2_ws/install/kobuki_description:/home/daisuke/ros2_ws/install/kobuki_core:/opt/ros/jazzy:/home/daisuke/ros2_ws/install/ekf:/home/daisuke/ros2_ws/install/ecl_core:/home/daisuke/ros2_ws/install/ecl_core_apps:/home/daisuke/ros2_ws/install/ecl_streams:/home/daisuke/ros2_ws/install/ecl_sigslots:/home/daisuke/ros2_ws/install/ecl_ipc:/home/daisuke/ros2_ws/install/ecl_devices:/home/daisuke/ros2_ws/install/ecl_threads:/home/daisuke/ros2_ws/install/ecl_mobile_robot:/home/daisuke/ros2_ws/install/ecl_manipulators:/home/daisuke/ros2_ws/install/ecl_geometry:/home/daisuke/ros2_ws/install/ecl_containers:/home/daisuke/ros2_ws/install/ecl_utilities:/home/daisuke/ros2_ws/install/ecl_statistics:/home/daisuke/ros2_ws/install/ecl_linear_algebra:/home/daisuke/ros2_ws/install/ecl_math:/home/daisuke/ros2_ws/install/ecl_formatters:/home/daisuke/ros2_ws/install/ecl_converters:/home/daisuke/ros2_ws/install/ecl_concepts:/home/daisuke/ros2_ws/install/ecl_type_traits:/home/daisuke/ros2_ws/install/ecl_time:/home/daisuke/ros2_ws/install/ecl_lite:/home/daisuke/ros2_ws/install/ecl_time_lite:/home/daisuke/ros2_ws/install/ecl_sigslots_lite:/home/daisuke/ros2_ws/install/ecl_mpl:/home/daisuke/ros2_ws/install/ecl_io:/home/daisuke/ros2_ws/install/ecl_filesystem:/home/daisuke/ros2_ws/install/ecl_exceptions:/home/daisuke/ros2_ws/install/ecl_errors:/home/daisuke/ros2_ws/install/ecl_eigen:/home/daisuke/ros2_ws/install/ecl_converters_lite:/home/daisuke/ros2_ws/install/ecl_console:/home/daisuke/ros2_ws/install/ecl_config:/home/daisuke/ros2_ws/install/ecl_command_line:/home/daisuke/ros2_ws/install/cmd_vel_mux:/opt/ros/jazzy/opt/gz_math_vendor:/opt/ros/jazzy/opt/gz_utils_vendor:/opt/ros/jazzy/opt/gz_cmake_vendor'}), 'shell': False}
+[28.742658] (point_lio_unilidar) StdoutLine: {'line': b'-- Install configuration: "Release"\n'}
+[28.743051] (point_lio_unilidar) StdoutLine: {'line': b'-- Execute custom install script\n'}
+[28.743224] (point_lio_unilidar) StdoutLine: {'line': b'-- Up-to-date symlink: /home/daisuke/unitree_ros_ws/src/point_lio_unilidar/install/point_lio_unilidar/lib/point_lio_unilidar/pointlio_mapping\n'}
+[28.743461] (point_lio_unilidar) StdoutLine: {'line': b'-- Up-to-date symlink: /home/daisuke/unitree_ros_ws/src/point_lio_unilidar/install/point_lio_unilidar/share/point_lio_unilidar/launch/gdb_debug_example.launch\n'}
+[28.743608] (point_lio_unilidar) StdoutLine: {'line': b'-- Up-to-date symlink: /home/daisuke/unitree_ros_ws/src/point_lio_unilidar/install/point_lio_unilidar/share/point_lio_unilidar/launch/mapping_avia.launch\n'}
+[28.743748] (point_lio_unilidar) StdoutLine: {'line': b'-- Up-to-date symlink: /home/daisuke/unitree_ros_ws/src/point_lio_unilidar/install/point_lio_unilidar/share/point_lio_unilidar/launch/mapping_horizon.launch\n'}
+[28.743854] (point_lio_unilidar) StdoutLine: {'line': b'-- Up-to-date symlink: /home/daisuke/unitree_ros_ws/src/point_lio_unilidar/install/point_lio_unilidar/share/point_lio_unilidar/launch/mapping_ouster64.launch\n'}
+[28.743960] (point_lio_unilidar) StdoutLine: {'line': b'-- Up-to-date symlink: /home/daisuke/unitree_ros_ws/src/point_lio_unilidar/install/point_lio_unilidar/share/point_lio_unilidar/launch/mapping_unilidar_l1.launch\n'}
+[28.744006] (point_lio_unilidar) StdoutLine: {'line': b'-- Up-to-date symlink: /home/daisuke/unitree_ros_ws/src/point_lio_unilidar/install/point_lio_unilidar/share/point_lio_unilidar/launch/mapping_unilidar_l1.launch.py\n'}
+[28.744041] (point_lio_unilidar) StdoutLine: {'line': b'-- Up-to-date symlink: /home/daisuke/unitree_ros_ws/src/point_lio_unilidar/install/point_lio_unilidar/share/point_lio_unilidar/launch/mapping_unilidar_l2.launch\n'}
+[28.744073] (point_lio_unilidar) StdoutLine: {'line': b'-- Up-to-date symlink: /home/daisuke/unitree_ros_ws/src/point_lio_unilidar/install/point_lio_unilidar/share/point_lio_unilidar/launch/mapping_velody16.launch\n'}
+[28.744129] (point_lio_unilidar) StdoutLine: {'line': b'-- Up-to-date symlink: /home/daisuke/unitree_ros_ws/src/point_lio_unilidar/install/point_lio_unilidar/share/point_lio_unilidar/config/avia.yaml\n'}
+[28.744182] (point_lio_unilidar) StdoutLine: {'line': b'-- Up-to-date symlink: /home/daisuke/unitree_ros_ws/src/point_lio_unilidar/install/point_lio_unilidar/share/point_lio_unilidar/config/backup/horizon.yaml.orig\n'}
+[28.744231] (point_lio_unilidar) StdoutLine: {'line': b'-- Up-to-date symlink: /home/daisuke/unitree_ros_ws/src/point_lio_unilidar/install/point_lio_unilidar/share/point_lio_unilidar/config/backup/ouster64.yaml.orig\n'}
+[28.744279] (point_lio_unilidar) StdoutLine: {'line': b'-- Up-to-date symlink: /home/daisuke/unitree_ros_ws/src/point_lio_unilidar/install/point_lio_unilidar/share/point_lio_unilidar/config/backup/unilidar_l1.yaml.orig\n'}
+[28.744328] (point_lio_unilidar) StdoutLine: {'line': b'-- Up-to-date symlink: /home/daisuke/unitree_ros_ws/src/point_lio_unilidar/install/point_lio_unilidar/share/point_lio_unilidar/config/backup/unilidar_l2.yaml.orig\n'}
+[28.744376] (point_lio_unilidar) StdoutLine: {'line': b'-- Up-to-date symlink: /home/daisuke/unitree_ros_ws/src/point_lio_unilidar/install/point_lio_unilidar/share/point_lio_unilidar/config/backup/velody16.yaml.orig\n'}
+[28.744418] (point_lio_unilidar) StdoutLine: {'line': b'-- Up-to-date symlink: /home/daisuke/unitree_ros_ws/src/point_lio_unilidar/install/point_lio_unilidar/share/point_lio_unilidar/config/horizon.yaml\n'}
+[28.744473] (point_lio_unilidar) StdoutLine: {'line': b'-- Up-to-date symlink: /home/daisuke/unitree_ros_ws/src/point_lio_unilidar/install/point_lio_unilidar/share/point_lio_unilidar/config/ouster64.yaml\n'}
+[28.744505] (point_lio_unilidar) StdoutLine: {'line': b'-- Up-to-date symlink: /home/daisuke/unitree_ros_ws/src/point_lio_unilidar/install/point_lio_unilidar/share/point_lio_unilidar/config/unilidar_l1.yaml\n'}
+[28.744555] (point_lio_unilidar) StdoutLine: {'line': b'-- Up-to-date symlink: /home/daisuke/unitree_ros_ws/src/point_lio_unilidar/install/point_lio_unilidar/share/point_lio_unilidar/config/unilidar_l2.yaml\n'}
+[28.744583] (point_lio_unilidar) StdoutLine: {'line': b'-- Up-to-date symlink: /home/daisuke/unitree_ros_ws/src/point_lio_unilidar/install/point_lio_unilidar/share/point_lio_unilidar/config/velody16.yaml\n'}
+[28.744691] (point_lio_unilidar) StdoutLine: {'line': b'-- Up-to-date symlink: /home/daisuke/unitree_ros_ws/src/point_lio_unilidar/install/point_lio_unilidar/share/point_lio_unilidar/rviz_cfg/.gitignore\n'}
+[28.744736] (point_lio_unilidar) StdoutLine: {'line': b'-- Up-to-date symlink: /home/daisuke/unitree_ros_ws/src/point_lio_unilidar/install/point_lio_unilidar/share/point_lio_unilidar/rviz_cfg/loam_livox.rviz\n'}
+[28.744783] (point_lio_unilidar) StdoutLine: {'line': b'-- Up-to-date symlink: /home/daisuke/unitree_ros_ws/src/point_lio_unilidar/install/point_lio_unilidar/share/point_lio_unilidar/rviz_cfg/loam_unilidar_default.rviz\n'}
+[28.744829] (point_lio_unilidar) StdoutLine: {'line': b'-- Up-to-date symlink: /home/daisuke/unitree_ros_ws/src/point_lio_unilidar/install/point_lio_unilidar/share/point_lio_unilidar/rviz_cfg/loam_unilidar_display.rviz\n'}
+[28.745052] (point_lio_unilidar) StdoutLine: {'line': b'-- Up-to-date symlink: /home/daisuke/unitree_ros_ws/src/point_lio_unilidar/install/point_lio_unilidar/share/ament_index/resource_index/package_run_dependencies/point_lio_unilidar\n'}
+[28.745142] (point_lio_unilidar) StdoutLine: {'line': b'-- Up-to-date symlink: /home/daisuke/unitree_ros_ws/src/point_lio_unilidar/install/point_lio_unilidar/share/ament_index/resource_index/parent_prefix_path/point_lio_unilidar\n'}
+[28.745227] (point_lio_unilidar) StdoutLine: {'line': b'-- Up-to-date symlink: /home/daisuke/unitree_ros_ws/src/point_lio_unilidar/install/point_lio_unilidar/share/point_lio_unilidar/environment/ament_prefix_path.sh\n'}
+[28.745307] (point_lio_unilidar) StdoutLine: {'line': b'-- Up-to-date symlink: /home/daisuke/unitree_ros_ws/src/point_lio_unilidar/install/point_lio_unilidar/share/point_lio_unilidar/environment/ament_prefix_path.dsv\n'}
+[28.745371] (point_lio_unilidar) StdoutLine: {'line': b'-- Up-to-date symlink: /home/daisuke/unitree_ros_ws/src/point_lio_unilidar/install/point_lio_unilidar/share/point_lio_unilidar/environment/path.sh\n'}
+[28.745444] (point_lio_unilidar) StdoutLine: {'line': b'-- Up-to-date symlink: /home/daisuke/unitree_ros_ws/src/point_lio_unilidar/install/point_lio_unilidar/share/point_lio_unilidar/environment/path.dsv\n'}
+[28.745515] (point_lio_unilidar) StdoutLine: {'line': b'-- Up-to-date symlink: /home/daisuke/unitree_ros_ws/src/point_lio_unilidar/install/point_lio_unilidar/share/point_lio_unilidar/local_setup.bash\n'}
+[28.745582] (point_lio_unilidar) StdoutLine: {'line': b'-- Up-to-date symlink: /home/daisuke/unitree_ros_ws/src/point_lio_unilidar/install/point_lio_unilidar/share/point_lio_unilidar/local_setup.sh\n'}
+[28.745673] (point_lio_unilidar) StdoutLine: {'line': b'-- Up-to-date symlink: /home/daisuke/unitree_ros_ws/src/point_lio_unilidar/install/point_lio_unilidar/share/point_lio_unilidar/local_setup.zsh\n'}
+[28.745786] (point_lio_unilidar) StdoutLine: {'line': b'-- Up-to-date symlink: /home/daisuke/unitree_ros_ws/src/point_lio_unilidar/install/point_lio_unilidar/share/point_lio_unilidar/local_setup.dsv\n'}
+[28.745855] (point_lio_unilidar) StdoutLine: {'line': b'-- Symlinking: /home/daisuke/unitree_ros_ws/src/point_lio_unilidar/install/point_lio_unilidar/share/point_lio_unilidar/package.dsv\n'}
+[28.754002] (point_lio_unilidar) StdoutLine: {'line': b'-- Up-to-date symlink: /home/daisuke/unitree_ros_ws/src/point_lio_unilidar/install/point_lio_unilidar/share/ament_index/resource_index/packages/point_lio_unilidar\n'}
+[28.754177] (point_lio_unilidar) StdoutLine: {'line': b'-- Up-to-date symlink: /home/daisuke/unitree_ros_ws/src/point_lio_unilidar/install/point_lio_unilidar/share/point_lio_unilidar/cmake/point_lio_unilidarConfig.cmake\n'}
+[28.754249] (point_lio_unilidar) StdoutLine: {'line': b'-- Up-to-date symlink: /home/daisuke/unitree_ros_ws/src/point_lio_unilidar/install/point_lio_unilidar/share/point_lio_unilidar/cmake/point_lio_unilidarConfig-version.cmake\n'}
+[28.754358] (point_lio_unilidar) StdoutLine: {'line': b'-- Up-to-date symlink: /home/daisuke/unitree_ros_ws/src/point_lio_unilidar/install/point_lio_unilidar/share/point_lio_unilidar/package.xml\n'}
+[28.756346] (point_lio_unilidar) CommandEnded: {'returncode': 0}
+[28.766143] (point_lio_unilidar) JobEnded: {'identifier': 'point_lio_unilidar', 'rc': 0}
+[28.766629] (-) EventReactorShutdown: {}

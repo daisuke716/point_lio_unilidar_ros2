@@ -1,0 +1,8 @@
+[ 16%] [32mBuilding CXX object CMakeFiles/pointlio_mapping.dir/src/laserMapping.cpp.o[0m
+[01m[K/home/daisuke/unitree_ros_ws/src/point_lio_unilidar/src/laserMapping.cpp:24:10:[m[K [01;31m[Kfatal error: [m[Kvisualization_msgs/msg/marker.hpp: No such file or directory
+   24 | #include [01;31m[K<visualization_msgs/msg/marker.hpp>[m[K
+      |          [01;31m[K^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[m[K
+compilation terminated.
+gmake[2]: *** [CMakeFiles/pointlio_mapping.dir/build.make:76: CMakeFiles/pointlio_mapping.dir/src/laserMapping.cpp.o] Error 1
+gmake[1]: *** [CMakeFiles/Makefile2:137: CMakeFiles/pointlio_mapping.dir/all] Error 2
+gmake: *** [Makefile:146: all] Error 2

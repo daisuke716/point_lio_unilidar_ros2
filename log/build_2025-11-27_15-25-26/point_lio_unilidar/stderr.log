@@ -1,0 +1,20 @@
+In file included from [01m[K/usr/include/boost/bind/detail/requires_cxx11.hpp:9[m[K,
+                 from [01m[K/usr/include/boost/bind/bind.hpp:24[m[K,
+                 from [01m[K/usr/include/boost/bind.hpp:29[m[K,
+                 from [01m[K/home/daisuke/unitree_ros_ws/src/point_lio_unilidar/include/../include/IKFoM/IKFoM_toolkit/esekfom/esekfom.hpp:42[m[K,
+                 from [01m[K/home/daisuke/unitree_ros_ws/src/point_lio_unilidar/src/Estimator.h:4[m[K,
+                 from [01m[K/home/daisuke/unitree_ros_ws/src/point_lio_unilidar/src/laserMapping.cpp:36[m[K:
+[01m[K/usr/include/boost/bind.hpp:36:1:[m[K [01;36m[Knote: [m[K‘[01m[K#pragma message: The practice of declaring the Bind placeholders (_1, _2, ...) in the global namespace is deprecated. Please use <boost/bind/bind.hpp> + using namespace boost::placeholders, or define BOOST_BIND_GLOBAL_PLACEHOLDERS to retain the current behavior.[m[K’
+   36 | [01;36m[KBOOST_PRAGMA_MESSAGE[m[K(
+      | [01;36m[K^~~~~~~~~~~~~~~~~~~~[m[K
+[01m[K/home/daisuke/unitree_ros_ws/src/point_lio_unilidar/src/laserMapping.cpp:[m[K In function ‘[01m[Kvoid[01;32m[K publish_init_kdtree[m[K(const rclcpp::Publisher<sensor_msgs::msg::PointCloud2_<std::allocator<void> > >::SharedPtr&)[m[K’:
+[01m[K/home/daisuke/unitree_ros_ws/src/point_lio_unilidar/src/laserMapping.cpp:710:17:[m[K [01;31m[Kerror: [m[K‘[01m[Kset_posestamp[m[K’ was not declared in this scope
+  710 |                 [01;31m[Kset_posestamp[m[K(tmp_pose);
+      |                 [01;31m[K^~~~~~~~~~~~~[m[K
+[01m[K/home/daisuke/unitree_ros_ws/src/point_lio_unilidar/src/laserMapping.cpp:[m[K In function ‘[01m[Kvoid[01;32m[K publish_frame_world[m[K(const rclcpp::Publisher<sensor_msgs::msg::PointCloud2_<std::allocator<void> > >::SharedPtr&)[m[K’:
+[01m[K/home/daisuke/unitree_ros_ws/src/point_lio_unilidar/src/laserMapping.cpp:774:17:[m[K [01;31m[Kerror: [m[K‘[01m[Kset_posestamp[m[K’ was not declared in this scope
+  774 |                 [01;31m[Kset_posestamp[m[K(tmp_pose);
+      |                 [01;31m[K^~~~~~~~~~~~~[m[K
+gmake[2]: *** [CMakeFiles/pointlio_mapping.dir/build.make:76: CMakeFiles/pointlio_mapping.dir/src/laserMapping.cpp.o] Error 1
+gmake[1]: *** [CMakeFiles/Makefile2:137: CMakeFiles/pointlio_mapping.dir/all] Error 2
+gmake: *** [Makefile:146: all] Error 2

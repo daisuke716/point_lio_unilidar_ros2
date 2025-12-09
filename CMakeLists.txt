@@ -1,87 +1,87 @@
-cmake_minimum_required(VERSION 2.8.3)
+cmake_minimum_required(VERSION 3.8)
 project(point_lio_unilidar)
 
-SET(CMAKE_BUILD_TYPE "Debug")
-
-ADD_COMPILE_OPTIONS(-std=c++14 )
-set(CMAKE_CXX_FLAGS "-std=c++14 -O3" ) 
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fexceptions" )
-
+# 编译优化
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_EXTENSIONS OFF)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -pthread -std=c++0x -std=c++14 -fexceptions")
+set(CMAKE_BUILD_TYPE "Release")
 
-add_definitions(-DROOT_DIR=\"${CMAKE_CURRENT_SOURCE_DIR}/\")
-message("DROOT_DIR = ${DROOT_DIR}")
+add_compile_options(-O3 -fexceptions -pthread)
 
-message("Current CPU archtecture: ${CMAKE_SYSTEM_PROCESSOR}")
-if(CMAKE_SYSTEM_PROCESSOR MATCHES "(x86)|(X86)|(amd64)|(AMD64)" )
-  include(ProcessorCount)
-  ProcessorCount(N)
-  message("Processer number:  ${N}")
-  if(N GREATER 5)
-    add_definitions(-DMP_EN)
-    add_definitions(-DMP_PROC_NUM=4)
-    message("core for MP:  3")
-  elseif(N GREATER 3)
-    math(EXPR PROC_NUM "${N} - 2")
-    add_definitions(-DMP_EN)
-    add_definitions(-DMP_PROC_NUM="${PROC_NUM}")
-    message("core for MP:  ${PROC_NUM}")
-  else()
-    add_definitions(-DMP_PROC_NUM=1)
-  endif()
+# 兼容多线程（MP_EN）
+message("Current CPU architecture: ${CMAKE_SYSTEM_PROCESSOR}")
+include(ProcessorCount)
+ProcessorCount(N)
+message("Processor number: ${N}")
+
+if(N GREATER 5)
+    add_definitions(-DMP_EN -DMP_PROC_NUM=4)
+elseif(N GREATER 3)
+    math(EXPR PROC_NUM "${N}-2")
+    add_definitions(-DMP_EN -DMP_PROC_NUM=${PROC_NUM})
 else()
-  add_definitions(-DMP_PROC_NUM=1)
+    add_definitions(-DMP_PROC_NUM=1)
 endif()
 
-find_package(OpenMP QUIET)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS}   ${OpenMP_C_FLAGS}")
-
-find_package(PythonLibs REQUIRED)
-find_path(MATPLOTLIB_CPP_INCLUDE_DIRS "matplotlibcpp.h")
-
-find_package(catkin REQUIRED COMPONENTS
-  geometry_msgs
-  nav_msgs
-  sensor_msgs
-  roscpp
-  rospy
-  std_msgs
-  pcl_ros
-  tf
-  # livox_ros_driver
-  message_generation
-  eigen_conversions
-)
-
+# ============================
+# ROS2 依赖
+# ============================
+find_package(ament_cmake REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(sensor_msgs REQUIRED)
+find_package(nav_msgs REQUIRED)
+find_package(geometry_msgs REQUIRED)
+find_package(tf2 REQUIRED)
+find_package(tf2_ros REQUIRED)
+find_package(pcl_conversions REQUIRED)
+find_package(PCL REQUIRED COMPONENTS common io)
 find_package(Eigen3 REQUIRED)
-find_package(PCL 1.8 REQUIRED)
-
-message(Eigen: ${EIGEN3_INCLUDE_DIR})
+find_package(visualization_msgs REQUIRED)
+find_package(yaml-cpp REQUIRED)
 
 include_directories(
-	${catkin_INCLUDE_DIRS} 
-  ${EIGEN3_INCLUDE_DIR}
-  ${PCL_INCLUDE_DIRS}
-  ${PYTHON_INCLUDE_DIRS}
-  include
+    include
+    ${PCL_INCLUDE_DIRS}
+    ${EIGEN3_INCLUDE_DIRS}
 )
 
-catkin_package(
-  CATKIN_DEPENDS geometry_msgs nav_msgs roscpp rospy std_msgs message_runtime
-  DEPENDS EIGEN3 PCL
-  INCLUDE_DIRS
+# ============================
+# 主节点 pointlio_mapping
+# ============================
+add_executable(pointlio_mapping
+    src/laserMapping.cpp
+    src/preprocess.cpp
+    src/parameters.cpp
+    src/Estimator.cpp
+    include/ikd-Tree/ikd_Tree.cpp
 )
 
-add_executable(pointlio_mapping 
-  src/laserMapping.cpp 
-  include/ikd-Tree/ikd_Tree.cpp 
-  src/parameters.cpp 
-  src/preprocess.cpp 
-  src/Estimator.cpp
+ament_target_dependencies(pointlio_mapping
+    rclcpp
+    sensor_msgs
+    nav_msgs
+    geometry_msgs
+    tf2
+    tf2_ros
+    PCL
+    pcl_conversions
+    yaml-cpp
+    visualization_msgs
 )
-target_link_libraries(pointlio_mapping ${catkin_LIBRARIES} ${PCL_LIBRARIES} ${PYTHON_LIBRARIES})
-target_include_directories(pointlio_mapping PRIVATE ${PYTHON_INCLUDE_DIRS})
+
+target_link_libraries(pointlio_mapping
+    ${PCL_LIBRARIES}
+    yaml-cpp
+)
+
+install(
+    TARGETS pointlio_mapping
+    DESTINATION lib/${PROJECT_NAME}
+)
+
+install(
+    DIRECTORY launch config rviz_cfg
+    DESTINATION share/${PROJECT_NAME}
+)
+
+ament_package()

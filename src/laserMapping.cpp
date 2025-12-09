@@ -5,7 +5,6 @@
 #include <fstream>
 #include <csignal>
 #include <unistd.h>
-#include <Python.h>
 #include <so3_math.h>
 #include <Eigen/Core>
 
@@ -15,15 +14,22 @@
 #include <pcl/filters/voxel_grid.h>
 #include <pcl/io/pcd_io.h>
 
-#include <ros/ros.h>
-#include <sensor_msgs/PointCloud2.h>
-#include <tf/transform_datatypes.h>
-#include <tf/transform_broadcaster.h>
-#include <geometry_msgs/Vector3.h>
+#include <rclcpp/rclcpp.hpp>
+#include <sensor_msgs/msg/point_cloud2.hpp>
+#include <sensor_msgs/msg/imu.hpp>
+#include <nav_msgs/msg/odometry.hpp>
+#include <nav_msgs/msg/path.hpp>
+#include <geometry_msgs/msg/vector3.hpp>
+#include <geometry_msgs/msg/pose_stamped.hpp>
+#include <visualization_msgs/msg/marker.hpp>
+#include <tf2_ros/transform_broadcaster.h>
+#include <geometry_msgs/msg/transform_stamped.hpp>
+#include <builtin_interfaces/msg/time.hpp>
+#include <tf2_msgs/msg/tf_message.hpp>
 // #include <livox_ros_driver/CustomMsg.h>
-#include <nav_msgs/Odometry.h>
-#include <nav_msgs/Path.h>
-#include <visualization_msgs/Marker.h>
+#include <nav_msgs/msg/odometry.hpp>
+#include <nav_msgs/msg/path.hpp>
+#include <visualization_msgs/msg/marker.hpp>
 
 #include "IMU_Processing.hpp"
 #include "parameters.h"
@@ -74,7 +80,7 @@ vector<BoxPointType> cub_needrm;
 
 deque<PointCloudXYZI::Ptr> lidar_buffer;
 deque<double> time_buffer;
-deque<sensor_msgs::Imu::ConstPtr> imu_deque;
+deque<sensor_msgs::msg::Imu::SharedPtr> imu_deque;
 
 PointCloudXYZI::Ptr feats_undistort(new PointCloudXYZI());
 PointCloudXYZI::Ptr feats_down_body_space(new PointCloudXYZI());
@@ -87,19 +93,36 @@ V3D euler_cur;
 
 MeasureGroup Measures;
 
-sensor_msgs::Imu imu_last, imu_next;
-sensor_msgs::Imu::ConstPtr imu_last_ptr;
-nav_msgs::Path path;
-nav_msgs::Odometry odomAftMapped;
-geometry_msgs::PoseStamped msg_body_pose;
+sensor_msgs::msg::Imu imu_last, imu_next;
+sensor_msgs::msg::Imu::SharedPtr imu_last_ptr;
+nav_msgs::msg::Path path;
+nav_msgs::msg::Odometry odomAftMapped;
+geometry_msgs::msg::PoseStamped msg_body_pose;
 
 
 void SigHandle(int sig)
 {
     flg_exit = true;
-    ROS_WARN("catch sig %d", sig);
+    RCLCPP_WARN(rclcpp::get_logger("pointlio_mapping"), "catch sig %d", sig);
     sig_buffer.notify_all();
 }
+
+inline builtin_interfaces::msg::Time to_time_msg(double t)
+{
+    builtin_interfaces::msg::Time ts;
+    ts.sec = static_cast<int32_t>(floor(t));
+    ts.nanosec = static_cast<uint32_t>((t - ts.sec) * 1e9);
+    return ts;
+}
+
+inline double time_from_msg(const builtin_interfaces::msg::Time &t)
+{
+    return double(t.sec) + double(t.nanosec) * 1e-9;
+}
+
+// Forward declaration: allow usage of set_posestamp before its full template definition
+template <typename T>
+void set_posestamp(T &out);
 
 
 inline void dump_lio_state_to_log(FILE *fp)
@@ -247,7 +270,7 @@ void lasermap_fov_segment()
 }
 
 
-void standard_pcl_cbk(const sensor_msgs::PointCloud2::ConstPtr &msg)
+void standard_pcl_cbk(const sensor_msgs::msg::PointCloud2::SharedPtr &msg)
 {
     // std::cout << "standard_pcl_cbk() run once!\n";
 
@@ -257,21 +280,21 @@ void standard_pcl_cbk(const sensor_msgs::PointCloud2::ConstPtr &msg)
 
     double preprocess_start_time = omp_get_wtime();
 
-    if (msg->header.stamp.toSec() < last_timestamp_lidar)
+    if (time_from_msg(msg->header.stamp) < last_timestamp_lidar)
     {
-        ROS_ERROR("lidar loop back, clear buffer");
+        RCLCPP_ERROR(rclcpp::get_logger("pointlio_mapping"), "lidar loop back, clear buffer");
 
         mtx_buffer.unlock();
         sig_buffer.notify_all();
         return;
     }
 
-    last_timestamp_lidar = msg->header.stamp.toSec();
+    last_timestamp_lidar = time_from_msg(msg->header.stamp);
 
     PointCloudXYZI::Ptr ptr(new PointCloudXYZI());
     PointCloudXYZI::Ptr ptr_div(new PointCloudXYZI());
 
-    double time_div = msg->header.stamp.toSec();
+    double time_div = time_from_msg(msg->header.stamp);
 
     p_pre->process(msg, ptr);
 
@@ -287,7 +310,7 @@ void standard_pcl_cbk(const sensor_msgs::PointCloud2::ConstPtr &msg)
 
             ptr_div->push_back(ptr->points[i]);
 
-            if (ptr->points[i].curvature / double(1000) + msg->header.stamp.toSec() - time_div > cut_frame_time_interval)
+            if (ptr->points[i].curvature / double(1000) + time_from_msg(msg->header.stamp) - time_div > cut_frame_time_interval)
             {
                 if (ptr_div->size() < 1)
                     continue;
@@ -342,123 +365,31 @@ void standard_pcl_cbk(const sensor_msgs::PointCloud2::ConstPtr &msg)
     else
     {
         lidar_buffer.emplace_back(ptr);
-        time_buffer.emplace_back(msg->header.stamp.toSec());
+    time_buffer.emplace_back(time_from_msg(msg->header.stamp));
     }
     s_plot11[scan_count] = omp_get_wtime() - preprocess_start_time;
     mtx_buffer.unlock();
     sig_buffer.notify_all();
 }
 
-
-// void livox_pcl_cbk(const livox_ros_driver::CustomMsg::ConstPtr &msg)
-// {
-
-//     mtx_buffer.lock();
-
-//     double preprocess_start_time = omp_get_wtime();
-
-//     scan_count++;
-
-//     if (msg->header.stamp.toSec() < last_timestamp_lidar)
-//     {
-//         ROS_ERROR("lidar loop back, clear buffer");
-
-//         mtx_buffer.unlock();
-//         sig_buffer.notify_all();
-//         return;
-//     }
-
-//     last_timestamp_lidar = msg->header.stamp.toSec();
-
-//     PointCloudXYZI::Ptr ptr(new PointCloudXYZI());
-//     PointCloudXYZI::Ptr ptr_div(new PointCloudXYZI());
-
-//     p_pre->process(msg, ptr);
-//     double time_div = msg->header.stamp.toSec();
-
-//     if (cut_frame)
-//     {
-
-//         sort(ptr->points.begin(), ptr->points.end(), time_list);
-
-//         for (int i = 0; i < ptr->size(); i++)
-//         {
-
-//             ptr_div->push_back(ptr->points[i]);
-//             if (ptr->points[i].curvature / double(1000) + msg->header.stamp.toSec() - time_div > cut_frame_time_interval)
-//             {
-//                 if (ptr_div->size() < 1)
-//                     continue;
-//                 PointCloudXYZI::Ptr ptr_div_i(new PointCloudXYZI());
-
-//                 *ptr_div_i = *ptr_div;
-
-//                 lidar_buffer.push_back(ptr_div_i);
-//                 time_buffer.push_back(time_div);
-//                 time_div += ptr->points[i].curvature / double(1000);
-//                 ptr_div->clear();
-//             }
-//         }
-//         if (!ptr_div->empty())
-//         {
-//             lidar_buffer.push_back(ptr_div);
-
-//             time_buffer.push_back(time_div);
-//         }
-//     }
-//     else if (con_frame)
-//     {
-//         if (frame_ct == 0)
-//         {
-
-//             time_con = last_timestamp_lidar;
-//         }
-//         if (frame_ct < con_frame_num)
-//         {
-//             for (int i = 0; i < ptr->size(); i++)
-//             {
-//                 ptr->points[i].curvature += (last_timestamp_lidar - time_con) * 1000;
-//                 ptr_con->push_back(ptr->points[i]);
-//             }
-//             frame_ct++;
-//         }
-//         else
-//         {
-//             PointCloudXYZI::Ptr ptr_con_i(new PointCloudXYZI());
-//             *ptr_con_i = *ptr_con;
-//             double time_con_i = time_con;
-//             lidar_buffer.push_back(ptr_con_i);
-//             time_buffer.push_back(time_con_i);
-//             ptr_con->clear();
-//             frame_ct = 0;
-//         }
-//     }
-//     else
-//     {
-//         lidar_buffer.emplace_back(ptr);
-//         time_buffer.emplace_back(msg->header.stamp.toSec());
-//     }
-//     s_plot11[scan_count] = omp_get_wtime() - preprocess_start_time;
-//     mtx_buffer.unlock();
-//     sig_buffer.notify_all();
-// }
-
-void imu_cbk(const sensor_msgs::Imu::ConstPtr &msg_in)
+void imu_cbk(const sensor_msgs::msg::Imu::SharedPtr &msg_in)
 {
 
     publish_count++;
 
-    sensor_msgs::Imu::Ptr msg(new sensor_msgs::Imu(*msg_in));
+    auto msg = std::make_shared<sensor_msgs::msg::Imu>(*msg_in);
 
-    msg->header.stamp = ros::Time().fromSec(msg_in->header.stamp.toSec() - time_lag_imu_to_lidar);
 
-    double timestamp = msg->header.stamp.toSec();
+    double stamp_in = double(msg_in->header.stamp.sec) + double(msg_in->header.stamp.nanosec) * 1e-9;
+    msg->header.stamp = to_time_msg(stamp_in - time_lag_imu_to_lidar);
+
+    double timestamp = double(msg->header.stamp.sec) + double(msg->header.stamp.nanosec) * 1e-9;
 
     mtx_buffer.lock();
 
     if (timestamp < last_timestamp_imu)
     {
-        ROS_ERROR("imu loop back, clear deque");
+    RCLCPP_ERROR(rclcpp::get_logger("pointlio_mapping"), "imu loop back, clear deque");
 
         mtx_buffer.unlock();
         sig_buffer.notify_all();
@@ -553,11 +484,11 @@ bool sync_packages(MeasureGroup &meas)
     /*** push imu data, and pop from imu buffer ***/
     if (p_imu->imu_need_init_)
     {
-        double imu_time = imu_deque.front()->header.stamp.toSec();
+        double imu_time = time_from_msg(imu_deque.front()->header.stamp);
         meas.imu.shrink_to_fit();
         while ((!imu_deque.empty()) && (imu_time < lidar_end_time))
         {
-            imu_time = imu_deque.front()->header.stamp.toSec();
+            imu_time = time_from_msg(imu_deque.front()->header.stamp);
             if (imu_time > lidar_end_time)
                 break;
             meas.imu.emplace_back(imu_deque.front());
@@ -569,13 +500,13 @@ bool sync_packages(MeasureGroup &meas)
     }
     else if (!init_map)
     {
-        double imu_time = imu_deque.front()->header.stamp.toSec();
+        double imu_time = time_from_msg(imu_deque.front()->header.stamp);
         meas.imu.shrink_to_fit();
         meas.imu.emplace_back(imu_last_ptr);
 
         while ((!imu_deque.empty()) && (imu_time < lidar_end_time))
         {
-            imu_time = imu_deque.front()->header.stamp.toSec();
+            imu_time = time_from_msg(imu_deque.front()->header.stamp);
             if (imu_time > lidar_end_time)
                 break;
             meas.imu.emplace_back(imu_deque.front());
@@ -641,27 +572,28 @@ void map_incremental()
     ikdtree.Add_Points(PointNoNeedDownsample, false);
 }
 
-void publish_init_kdtree(const ros::Publisher &pubLaserCloudFullRes)
+void publish_init_kdtree(const rclcpp::Publisher<sensor_msgs::msg::PointCloud2>::SharedPtr &pubLaserCloudFullRes)
 {
     int size_init_ikdtree = ikdtree.size();
     PointCloudXYZI::Ptr laserCloudInit(new PointCloudXYZI(size_init_ikdtree, 1));
 
-    sensor_msgs::PointCloud2 laserCloudmsg;
+    sensor_msgs::msg::PointCloud2 laserCloudmsg;
     PointVector().swap(ikdtree.PCL_Storage);
     ikdtree.flatten(ikdtree.Root_Node, ikdtree.PCL_Storage, NOT_RECORD);
 
     laserCloudInit->points = ikdtree.PCL_Storage;
     pcl::toROSMsg(*laserCloudInit, laserCloudmsg);
 
-    laserCloudmsg.header.stamp = ros::Time().fromSec(lidar_end_time);
+    // Use lidar_end_time for the map snapshot (keep original behavior)
+    laserCloudmsg.header.stamp = to_time_msg(lidar_end_time);
     laserCloudmsg.header.frame_id = "camera_init";
-    pubLaserCloudFullRes.publish(laserCloudmsg);
+    if (pubLaserCloudFullRes) pubLaserCloudFullRes->publish(laserCloudmsg);
 }
 
 
 PointCloudXYZI::Ptr pcl_wait_pub(new PointCloudXYZI(500000, 1));
 PointCloudXYZI::Ptr pcl_wait_save(new PointCloudXYZI());
-void publish_frame_world(const ros::Publisher &pubLaserCloudFullRes)
+void publish_frame_world(const rclcpp::Publisher<sensor_msgs::msg::PointCloud2>::SharedPtr &pubLaserCloudFullRes)
 {
     if (scan_pub_en)
     {
@@ -678,12 +610,27 @@ void publish_frame_world(const ros::Publisher &pubLaserCloudFullRes)
             laserCloudWorld->points[i].z = feats_down_world->points[i].z;
             laserCloudWorld->points[i].intensity = feats_down_world->points[i].intensity;
         }
-        sensor_msgs::PointCloud2 laserCloudmsg;
+    sensor_msgs::msg::PointCloud2 laserCloudmsg;
         pcl::toROSMsg(*laserCloudWorld, laserCloudmsg);
 
-        laserCloudmsg.header.stamp = ros::Time().fromSec(lidar_end_time);
+    // Prefer the latest odom timestamp so TF lookups succeed for this cloud
+    if (odomAftMapped.header.stamp.sec != 0 || odomAftMapped.header.stamp.nanosec != 0)
+    {
+        laserCloudmsg.header.stamp = odomAftMapped.header.stamp;
+    }
+    else
+    {
+        laserCloudmsg.header.stamp = to_time_msg(lidar_end_time);
+    }
         laserCloudmsg.header.frame_id = "camera_init";
-        pubLaserCloudFullRes.publish(laserCloudmsg);
+    if (pubLaserCloudFullRes) pubLaserCloudFullRes->publish(laserCloudmsg);
+    // (No one-time TF fallback here) keep TF publishing logic unchanged.
+    static int pub_debug_cnt = 0;
+    pub_debug_cnt++;
+    if ((pub_debug_cnt % 100) == 0)
+    {
+        RCLCPP_DEBUG(rclcpp::get_logger("pointlio_mapping"), "published cloud_registered (count %d)", pub_debug_cnt);
+    }
         publish_count -= PUBFRAME_PERIOD;
     }
 
@@ -721,7 +668,7 @@ void publish_frame_world(const ros::Publisher &pubLaserCloudFullRes)
 }
 
 
-void publish_frame_body(const ros::Publisher &pubLaserCloudFull_body)
+void publish_frame_body(const rclcpp::Publisher<sensor_msgs::msg::PointCloud2>::SharedPtr &pubLaserCloudFull_body)
 {
     int size = feats_undistort->points.size();
     PointCloudXYZI::Ptr laserCloudIMUBody(new PointCloudXYZI(size, 1));
@@ -732,11 +679,25 @@ void publish_frame_body(const ros::Publisher &pubLaserCloudFull_body)
                             &laserCloudIMUBody->points[i]);
     }
 
-    sensor_msgs::PointCloud2 laserCloudmsg;
+    sensor_msgs::msg::PointCloud2 laserCloudmsg;
     pcl::toROSMsg(*laserCloudIMUBody, laserCloudmsg);
-    laserCloudmsg.header.stamp = ros::Time().fromSec(lidar_end_time);
+    // Prefer latest odom stamp for body cloud as well
+    if (odomAftMapped.header.stamp.sec != 0 || odomAftMapped.header.stamp.nanosec != 0)
+    {
+        laserCloudmsg.header.stamp = odomAftMapped.header.stamp;
+    }
+    else
+    {
+        laserCloudmsg.header.stamp = to_time_msg(lidar_end_time);
+    }
     laserCloudmsg.header.frame_id = "body";
-    pubLaserCloudFull_body.publish(laserCloudmsg);
+    if (pubLaserCloudFull_body) pubLaserCloudFull_body->publish(laserCloudmsg);
+    static int pub_body_debug_cnt = 0;
+    pub_body_debug_cnt++;
+    if ((pub_body_debug_cnt % 100) == 0)
+    {
+        RCLCPP_DEBUG(rclcpp::get_logger("pointlio_mapping"), "published cloud_registered_body (count %d)", pub_body_debug_cnt);
+    }
     publish_count -= PUBFRAME_PERIOD;
 }
 
@@ -765,61 +726,70 @@ void set_posestamp(T &out)
     }
 }
 
-void publish_odometry(const ros::Publisher &pubOdomAftMapped)
+void publish_odometry(const rclcpp::Publisher<nav_msgs::msg::Odometry>::SharedPtr &pubOdomAftMapped, rclcpp::Node::SharedPtr node)
 {
     odomAftMapped.header.frame_id = "camera_init";
     odomAftMapped.child_frame_id = "aft_mapped";
     if (publish_odometry_without_downsample)
     {
-        odomAftMapped.header.stamp = ros::Time().fromSec(time_current);
+        odomAftMapped.header.stamp = to_time_msg(time_current);
     }
     else
     {
-        odomAftMapped.header.stamp = ros::Time().fromSec(lidar_end_time);
+        odomAftMapped.header.stamp = to_time_msg(lidar_end_time);
     }
     set_posestamp(odomAftMapped.pose.pose);
 
-    pubOdomAftMapped.publish(odomAftMapped);
+    pubOdomAftMapped->publish(odomAftMapped);
 
-    static tf::TransformBroadcaster br;
-    tf::Transform transform;
-    tf::Quaternion q;
-    transform.setOrigin(tf::Vector3(odomAftMapped.pose.pose.position.x,
-                                    odomAftMapped.pose.pose.position.y,
-                                    odomAftMapped.pose.pose.position.z));
-    q.setW(odomAftMapped.pose.pose.orientation.w);
-    q.setX(odomAftMapped.pose.pose.orientation.x);
-    q.setY(odomAftMapped.pose.pose.orientation.y);
-    q.setZ(odomAftMapped.pose.pose.orientation.z);
-    transform.setRotation(q);
-    br.sendTransform(tf::StampedTransform(transform, odomAftMapped.header.stamp, "camera_init", "aft_mapped"));
+    // TF2 transform broadcast: publish odom-stamped transform for aft_mapped
+    try
+    {
+        tf2_ros::TransformBroadcaster br(node);
+        geometry_msgs::msg::TransformStamped t;
+        t.header.frame_id = "camera_init";
+        t.child_frame_id = "aft_mapped";
+        t.transform.translation.x = odomAftMapped.pose.pose.position.x;
+        t.transform.translation.y = odomAftMapped.pose.pose.position.y;
+        t.transform.translation.z = odomAftMapped.pose.pose.position.z;
+        t.transform.rotation = odomAftMapped.pose.pose.orientation;
+        t.header.stamp = odomAftMapped.header.stamp;
+        br.sendTransform(t);
+    }
+    catch (const std::exception &e)
+    {
+        RCLCPP_WARN(node->get_logger(), "publish_odometry: failed to broadcast transform: %s", e.what());
+    }
 }
 
-void publish_path(const ros::Publisher pubPath)
+void publish_path(const rclcpp::Publisher<nav_msgs::msg::Path>::SharedPtr &pubPath)
 {
     set_posestamp(msg_body_pose.pose);
 
-    msg_body_pose.header.stamp = ros::Time().fromSec(lidar_end_time);
+    msg_body_pose.header.stamp = to_time_msg(lidar_end_time);
+    msg_body_pose.header.stamp = to_time_msg(lidar_end_time);
     msg_body_pose.header.frame_id = "camera_init";
     static int jjj = 0;
     jjj++;
 
     {
         path.poses.emplace_back(msg_body_pose);
-        pubPath.publish(path);
+    pubPath->publish(path);
     }
 }
 
 int main(int argc, char **argv)
 {
+    rclcpp::init(argc, argv);
+    auto node = rclcpp::Node::make_shared("laserMapping");
+    // g_node assignment removed
 
-    ros::init(argc, argv, "laserMapping");
-    ros::NodeHandle nh("~");
-
-    readParameters(nh);
+    readParameters(node);
     cout << "lidar_type: " << lidar_type << endl;
 
-    path.header.stamp = ros::Time().fromSec(lidar_end_time);
+    // Do not send ad-hoc one-time TF here; odom -> sendTransform is handled by publish_odometry
+
+    path.header.stamp = to_time_msg(lidar_end_time);
     path.header.frame_id = "camera_init";
 
     int frame_num = 0;
@@ -895,36 +865,53 @@ int main(int argc, char **argv)
 
     /*** ROS subscribe initialization ***/
 
-    // ros::Subscriber sub_pcl = p_pre->lidar_type == AVIA ? nh.subscribe(lid_topic, 200000, livox_pcl_cbk) : nh.subscribe(lid_topic, 200000, standard_pcl_cbk);
-    
-    ros::Subscriber sub_pcl = nh.subscribe(lid_topic, 200000, standard_pcl_cbk);
 
-    ros::Subscriber sub_imu = nh.subscribe(imu_topic, 200000, imu_cbk);
+    // ROS2 subscriptions & publishers
+    auto sub_pcl = node->create_subscription<sensor_msgs::msg::PointCloud2>(lid_topic, rclcpp::SensorDataQoS(), [](const sensor_msgs::msg::PointCloud2::SharedPtr msg){ standard_pcl_cbk(msg); });
+    auto sub_imu = node->create_subscription<sensor_msgs::msg::Imu>(imu_topic, rclcpp::SensorDataQoS(), [](const sensor_msgs::msg::Imu::SharedPtr msg){ imu_cbk(msg); });
 
-    ros::Publisher pubLaserCloudFullRes = nh.advertise<sensor_msgs::PointCloud2>("/pointlio/cloud_registered", 100000);
-
-    ros::Publisher pubLaserCloudFullRes_body = nh.advertise<sensor_msgs::PointCloud2>("/pointlio/cloud_registered_body", 100000);
-
-    ros::Publisher pubLaserCloudEffect = nh.advertise<sensor_msgs::PointCloud2>("/pointlio/cloud_effected", 100000);
-
-    ros::Publisher pubLaserCloudMap = nh.advertise<sensor_msgs::PointCloud2>("/pointlio/laser_map", 100000);
-
-    ros::Publisher pubOdomAftMapped = nh.advertise<nav_msgs::Odometry>("/pointlio/odom", 100000);
-
-    ros::Publisher pubPath = nh.advertise<nav_msgs::Path>("/pointlio/path", 100000);
-
-    ros::Publisher plane_pub = nh.advertise<visualization_msgs::Marker>("/pointlio/planner_normal", 1000);
+    // Choose QoS for pointclouds based on parameter
+    rclcpp::QoS cloud_qos(rclcpp::KeepLast(5));
+    if (publish_cloud_qos == "besteffort" || publish_cloud_qos == "best_effort" || publish_cloud_qos == "sensor")
+    {
+        // Best effort (SensorDataQoS)
+        RCLCPP_INFO(node->get_logger(), "Creating cloud publishers with BestEffort QoS");
+    }
+    else
+    {
+        // Default to Reliable
+        cloud_qos.reliability(rclcpp::ReliabilityPolicy::Reliable);
+        RCLCPP_INFO(node->get_logger(), "Creating cloud publishers with Reliable QoS");
+    }
+    auto pubLaserCloudFullRes = (publish_cloud_qos == "besteffort" || publish_cloud_qos == "best_effort" || publish_cloud_qos == "sensor") ?
+        node->create_publisher<sensor_msgs::msg::PointCloud2>("/pointlio/cloud_registered", rclcpp::SensorDataQoS()) :
+        node->create_publisher<sensor_msgs::msg::PointCloud2>("/pointlio/cloud_registered", cloud_qos);
+    auto pubLaserCloudFullRes_body = (publish_cloud_qos == "besteffort" || publish_cloud_qos == "best_effort" || publish_cloud_qos == "sensor") ?
+        node->create_publisher<sensor_msgs::msg::PointCloud2>("/pointlio/cloud_registered_body", rclcpp::SensorDataQoS()) :
+        node->create_publisher<sensor_msgs::msg::PointCloud2>("/pointlio/cloud_registered_body", cloud_qos);
+    auto pubLaserCloudEffect = (publish_cloud_qos == "besteffort" || publish_cloud_qos == "best_effort" || publish_cloud_qos == "sensor") ?
+        node->create_publisher<sensor_msgs::msg::PointCloud2>("/pointlio/cloud_effected", rclcpp::SensorDataQoS()) :
+        node->create_publisher<sensor_msgs::msg::PointCloud2>("/pointlio/cloud_effected", cloud_qos);
+    auto pubLaserCloudMap = (publish_cloud_qos == "besteffort" || publish_cloud_qos == "best_effort" || publish_cloud_qos == "sensor") ?
+        node->create_publisher<sensor_msgs::msg::PointCloud2>("/pointlio/laser_map", rclcpp::SensorDataQoS()) :
+        node->create_publisher<sensor_msgs::msg::PointCloud2>("/pointlio/laser_map", cloud_qos);
+    rclcpp::QoS default_qos(rclcpp::KeepLast(10));
+    default_qos.reliability(rclcpp::ReliabilityPolicy::Reliable);
+    auto pubOdomAftMapped = node->create_publisher<nav_msgs::msg::Odometry>("/pointlio/odom", default_qos);
+    auto pubPath = node->create_publisher<nav_msgs::msg::Path>("/pointlio/path", default_qos);
+    auto plane_pub = node->create_publisher<visualization_msgs::msg::Marker>("/pointlio/planner_normal", default_qos);
 
     signal(SIGINT, SigHandle);
 
-    ros::Rate rate(5000);
-    while (ros::ok())
+
+    rclcpp::Rate rate(5000);
+    while (rclcpp::ok())
     {
 
         if (flg_exit)
             break;
 
-        ros::spinOnce();
+    rclcpp::spin_some(node);
 
         if (sync_packages(Measures) == false)
         {
@@ -941,7 +928,7 @@ int main(int argc, char **argv)
 
         if (flg_reset)
         {
-            ROS_WARN("reset when rosbag play back");
+            RCLCPP_WARN(rclcpp::get_logger("pointlio_mapping"), "reset when rosbag play back");
             p_imu->Reset();
             flg_reset = false;
             continue;
@@ -965,7 +952,7 @@ int main(int argc, char **argv)
         {
             if (!p_imu->gravity_align_)
             {
-                while (Measures.lidar_beg_time > imu_next.header.stamp.toSec())
+            while (Measures.lidar_beg_time > time_from_msg(imu_next.header.stamp))
                 {
                     imu_last = imu_next;
                     imu_next = *(imu_deque.front());
@@ -1125,7 +1112,7 @@ int main(int argc, char **argv)
                 {
                     if (imu_en)
                     {
-                        while (time_current > imu_next.header.stamp.toSec())
+                        while (time_current > time_from_msg(imu_next.header.stamp))
                         {
                             imu_last = imu_next;
                             imu_next = *(imu_deque.front());
@@ -1143,7 +1130,7 @@ int main(int argc, char **argv)
 
                 if (imu_en)
                 {
-                    bool imu_comes = time_current > imu_next.header.stamp.toSec();
+                    bool imu_comes = time_current > time_from_msg(imu_next.header.stamp);
                     while (imu_comes)
                     {
                         imu_upda_cov = true;
@@ -1154,21 +1141,20 @@ int main(int argc, char **argv)
                         imu_last = imu_next;
                         imu_next = *(imu_deque.front());
                         imu_deque.pop_front();
-                        double dt = imu_last.header.stamp.toSec() - time_predict_last_const;
+                        double dt = time_from_msg(imu_last.header.stamp) - time_predict_last_const;
                         kf_output.predict(dt, Q_output, input_in, true, false);
-                        time_predict_last_const = imu_last.header.stamp.toSec();
-                        imu_comes = time_current > imu_next.header.stamp.toSec();
+                        time_predict_last_const = time_from_msg(imu_last.header.stamp);
+                        imu_comes = time_current > time_from_msg(imu_next.header.stamp);
 
                         {
-                            double dt_cov = imu_last.header.stamp.toSec() - time_update_last;
+                            double dt_cov = time_from_msg(imu_last.header.stamp) - time_update_last;
 
                             if (dt_cov > 0.0)
                             {
-                                time_update_last = imu_last.header.stamp.toSec();
+                                time_update_last = time_from_msg(imu_last.header.stamp);
                                 double propag_imu_start = omp_get_wtime();
 
                                 kf_output.predict(dt_cov, Q_output, input_in, false, true);
-
                                 propag_time += omp_get_wtime() - propag_imu_start;
                                 double solve_imu_start = omp_get_wtime();
                                 kf_output.update_iterated_dyn_share_IMU();
@@ -1197,7 +1183,7 @@ int main(int argc, char **argv)
 
                 if (feats_down_size < 1)
                 {
-                    ROS_WARN("No point, skip this scan!\n");
+                    RCLCPP_WARN(rclcpp::get_logger("pointlio_mapping"), "No point, skip this scan!\n");
                     idx += time_seq[k];
                     continue;
                 }
@@ -1226,7 +1212,7 @@ int main(int argc, char **argv)
                 {
                     /******* Publish odometry *******/
 
-                    publish_odometry(pubOdomAftMapped);
+                    publish_odometry(pubOdomAftMapped, node);
                     if (runtime_pos_log)
                     {
                         state_out = kf_output.x_;
@@ -1262,7 +1248,7 @@ int main(int argc, char **argv)
                 time_current = point_body.curvature / 1000.0 + pcl_beg_time;
                 if (is_first_frame)
                 {
-                    while (time_current > imu_next.header.stamp.toSec())
+                    while (time_current > time_from_msg(imu_next.header.stamp))
                     {
                         imu_last = imu_next;
                         imu_next = *(imu_deque.front());
@@ -1287,7 +1273,7 @@ int main(int argc, char **argv)
                     }
                 }
 
-                while (time_current > imu_next.header.stamp.toSec())
+                while (time_current > time_from_msg(imu_next.header.stamp))
                 {
                     imu_last = imu_next;
                     imu_next = *(imu_deque.front());
@@ -1296,16 +1282,16 @@ int main(int argc, char **argv)
                     input_in.acc << imu_last.linear_acceleration.x, imu_last.linear_acceleration.y, imu_last.linear_acceleration.z;
 
                     input_in.acc = input_in.acc * G_m_s2 / acc_norm;
-                    double dt = imu_last.header.stamp.toSec() - t_last;
+                    double dt = time_from_msg(imu_last.header.stamp) - t_last;
 
-                    double dt_cov = imu_last.header.stamp.toSec() - time_update_last;
+                    double dt_cov = time_from_msg(imu_last.header.stamp) - time_update_last;
                     if (dt_cov > 0.0)
                     {
                         kf_input.predict(dt_cov, Q_input, input_in, false, true);
-                        time_update_last = imu_last.header.stamp.toSec();
+                        time_update_last = time_from_msg(imu_last.header.stamp);
                     }
                     kf_input.predict(dt, Q_input, input_in, true, false);
-                    t_last = imu_last.header.stamp.toSec();
+                    t_last = time_from_msg(imu_last.header.stamp);
                     imu_prop_cov = true;
                 }
 
@@ -1330,7 +1316,7 @@ int main(int argc, char **argv)
 
                 if (feats_down_size < 1)
                 {
-                    ROS_WARN("No point, skip this scan!\n");
+                    RCLCPP_WARN(rclcpp::get_logger("pointlio_mapping"), "No point, skip this scan!\n");
 
                     idx += time_seq[k];
                     continue;
@@ -1347,7 +1333,7 @@ int main(int argc, char **argv)
                 {
                     /******* Publish odometry *******/
 
-                    publish_odometry(pubOdomAftMapped);
+                    publish_odometry(pubOdomAftMapped, node);
                     if (runtime_pos_log)
                     {
                         state_in = kf_input.x_;
@@ -1373,7 +1359,7 @@ int main(int argc, char **argv)
         /******* Publish odometry downsample *******/
         if (!publish_odometry_without_downsample)
         {
-            publish_odometry(pubOdomAftMapped);
+            publish_odometry(pubOdomAftMapped, node);
         }
 
         /*** add the feature points to map kdtree ***/

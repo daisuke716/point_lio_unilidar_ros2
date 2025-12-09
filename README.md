@@ -116,11 +116,11 @@ roslaunch unitree_lidar_ros run_without_rviz.launch
 
 Run `Point-LIO`:
 ```
-cd catkin_unilidar_point_lio
+cd point_lio_unilidar
 
-source devel/setup.bash
+source install/setup.bash
 
-roslaunch point_lio_unilidar mapping_unilidar_l1.launch 
+ros2 launch point_lio_unilidar mapping_unilidar_l1.launch.py
 ```
 
 

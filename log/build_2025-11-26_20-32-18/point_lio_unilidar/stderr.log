@@ -1,0 +1,27 @@
+In file included from [01m[K/usr/include/boost/bind/detail/requires_cxx11.hpp:9[m[K,
+                 from [01m[K/usr/include/boost/bind/bind.hpp:24[m[K,
+                 from [01m[K/usr/include/boost/bind.hpp:29[m[K,
+                 from [01m[K/home/daisuke/unitree_ros_ws/src/point_lio_unilidar/include/../include/IKFoM/IKFoM_toolkit/esekfom/esekfom.hpp:42[m[K,
+                 from [01m[K/home/daisuke/unitree_ros_ws/src/point_lio_unilidar/src/Estimator.h:4[m[K,
+                 from [01m[K/home/daisuke/unitree_ros_ws/src/point_lio_unilidar/src/laserMapping.cpp:36[m[K:
+[01m[K/usr/include/boost/bind.hpp:36:1:[m[K [01;36m[Knote: [m[K‘[01m[K#pragma message: The practice of declaring the Bind placeholders (_1, _2, ...) in the global namespace is deprecated. Please use <boost/bind/bind.hpp> + using namespace boost::placeholders, or define BOOST_BIND_GLOBAL_PLACEHOLDERS to retain the current behavior.[m[K’
+   36 | [01;36m[KBOOST_PRAGMA_MESSAGE[m[K(
+      | [01;36m[K^~~~~~~~~~~~~~~~~~~~[m[K
+[01m[K/home/daisuke/unitree_ros_ws/src/point_lio_unilidar/src/laserMapping.cpp:[m[K In function ‘[01m[Kint[01;32m[K main[m[K(int, char**)[m[K’:
+[01m[K/home/daisuke/unitree_ros_ws/src/point_lio_unilidar/src/laserMapping.cpp:940:35:[m[K [01;31m[Kerror: [m[K‘[01m[KQoSOptions[m[K’ is not a member of ‘[01m[Krclcpp[m[K’; did you mean ‘[01m[KNodeOptions[m[K’?
+  940 |     rclcpp::QoS cloud_qos(rclcpp::[01;31m[KQoSOptions[m[K(rclcpp::KeepLast(5)).get_rmw_qos_profile());
+      |                                   [01;31m[K^~~~~~~~~~[m[K
+      |                                   [32m[KNodeOptions[m[K
+[01m[K/home/daisuke/unitree_ros_ws/src/point_lio_unilidar/src/laserMapping.cpp:[m[K In lambda function:
+[01m[K/home/daisuke/unitree_ros_ws/src/point_lio_unilidar/src/laserMapping.cpp:996:97:[m[K [01;31m[Kerror: [m[K‘[01m[Kpublish_hz[m[K’ is not captured
+  996 |                 std::this_thread::sleep_for(std::chrono::milliseconds(static_cast<int>(1000.0 / [01;31m[Kpublish_hz[m[K)));
+      |                                                                                                 [01;31m[K^~~~~~~~~~[m[K
+[01m[K/home/daisuke/unitree_ros_ws/src/point_lio_unilidar/src/laserMapping.cpp:982:47:[m[K [01;36m[Knote: [m[Kthe lambda has no capture-default
+  982 |         std::thread([tfm, publish_count_target[01;36m[K][m[K() {
+      |                                               [01;36m[K^[m[K
+[01m[K/home/daisuke/unitree_ros_ws/src/point_lio_unilidar/src/laserMapping.cpp:978:22:[m[K [01;36m[Knote: [m[K‘[01m[Kconst double publish_hz[m[K’ declared here
+  978 |         const double [01;36m[Kpublish_hz[m[K = 10.0;
+      |                      [01;36m[K^~~~~~~~~~[m[K
+gmake[2]: *** [CMakeFiles/pointlio_mapping.dir/build.make:76: CMakeFiles/pointlio_mapping.dir/src/laserMapping.cpp.o] Error 1
+gmake[1]: *** [CMakeFiles/Makefile2:137: CMakeFiles/pointlio_mapping.dir/all] Error 2
+gmake: *** [Makefile:146: all] Error 2
