@@ -2,3 +2,5 @@
 ./PCD/scans.pcd
 ./CMakeFiles/
 ./log/
+./build/
+./install/

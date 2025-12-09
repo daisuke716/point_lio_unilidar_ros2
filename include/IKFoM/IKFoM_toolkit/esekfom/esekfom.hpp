@@ -39,7 +39,12 @@
 #include <vector>
 #include <cstdlib>
 
-#include <boost/bind.hpp>
+#include <boost/bind/bind.hpp>
+// Use placeholders in boost::placeholders instead of declaring them in the global namespace
+// to avoid deprecation warnings. The recommended pattern is to include <boost/bind/bind.hpp>
+// and then use the boost::placeholders as needed. Here we bring them into the current
+// namespace to preserve existing usage of `_1`, `_2`, etc. that older code depends on.
+using namespace boost::placeholders;
 #include <Eigen/Core>
 #include <Eigen/Geometry>
 #include <Eigen/Dense>

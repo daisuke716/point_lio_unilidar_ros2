@@ -74,6 +74,10 @@ target_link_libraries(pointlio_mapping
     yaml-cpp
 )
 
+# Define BOOST_BIND_GLOBAL_PLACEHOLDERS for this target to suppress deprecation
+# warnings about boost bind placeholders being injected into the global namespace.
+target_compile_definitions(pointlio_mapping PRIVATE BOOST_BIND_GLOBAL_PLACEHOLDERS)
+
 install(
     TARGETS pointlio_mapping
     DESTINATION lib/${PROJECT_NAME}

@@ -53,10 +53,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/daisuke/unitree_ros_ws/src/point_lio_unilidar
+CMAKE_SOURCE_DIR = /home/daisuke/unitree_ros_ws/src/point_lio_unilidar_ros2
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/daisuke/unitree_ros_ws/src/point_lio_unilidar/build/point_lio_unilidar
+CMAKE_BINARY_DIR = /home/daisuke/unitree_ros_ws/src/point_lio_unilidar_ros2/build/point_lio_unilidar
 
 # Utility rule file for uninstall.
 
@@ -78,6 +78,6 @@ CMakeFiles/uninstall.dir/clean:
 .PHONY : CMakeFiles/uninstall.dir/clean
 
 CMakeFiles/uninstall.dir/depend:
-	cd /home/daisuke/unitree_ros_ws/src/point_lio_unilidar/build/point_lio_unilidar && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/daisuke/unitree_ros_ws/src/point_lio_unilidar /home/daisuke/unitree_ros_ws/src/point_lio_unilidar /home/daisuke/unitree_ros_ws/src/point_lio_unilidar/build/point_lio_unilidar /home/daisuke/unitree_ros_ws/src/point_lio_unilidar/build/point_lio_unilidar /home/daisuke/unitree_ros_ws/src/point_lio_unilidar/build/point_lio_unilidar/CMakeFiles/uninstall.dir/DependInfo.cmake "--color=$(COLOR)"
+	cd /home/daisuke/unitree_ros_ws/src/point_lio_unilidar_ros2/build/point_lio_unilidar && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/daisuke/unitree_ros_ws/src/point_lio_unilidar_ros2 /home/daisuke/unitree_ros_ws/src/point_lio_unilidar_ros2 /home/daisuke/unitree_ros_ws/src/point_lio_unilidar_ros2/build/point_lio_unilidar /home/daisuke/unitree_ros_ws/src/point_lio_unilidar_ros2/build/point_lio_unilidar /home/daisuke/unitree_ros_ws/src/point_lio_unilidar_ros2/build/point_lio_unilidar/CMakeFiles/uninstall.dir/DependInfo.cmake "--color=$(COLOR)"
 .PHONY : CMakeFiles/uninstall.dir/depend
 

@@ -2,7 +2,7 @@
 # ament_cmake_core/cmake/uninstall_target/ament_cmake_uninstall_target.cmake.in
 
 function(ament_cmake_uninstall_target_remove_empty_directories path)
-  set(install_space "/home/daisuke/unitree_ros_ws/src/point_lio_unilidar/install/point_lio_unilidar")
+  set(install_space "/home/daisuke/unitree_ros_ws/src/point_lio_unilidar_ros2/install/point_lio_unilidar")
   if(install_space STREQUAL "")
     message(FATAL_ERROR "The CMAKE_INSTALL_PREFIX variable must not be empty")
   endif()
@@ -29,7 +29,7 @@ function(ament_cmake_uninstall_target_remove_empty_directories path)
 endfunction()
 
 # uninstall files installed using the standard install() function
-set(install_manifest "/home/daisuke/unitree_ros_ws/src/point_lio_unilidar/build/point_lio_unilidar/install_manifest.txt")
+set(install_manifest "/home/daisuke/unitree_ros_ws/src/point_lio_unilidar_ros2/build/point_lio_unilidar/install_manifest.txt")
 if(NOT EXISTS "${install_manifest}")
   message(FATAL_ERROR "Cannot find install manifest: ${install_manifest}")
 endif()
@@ -55,6 +55,3 @@ endforeach()
 message(STATUS "Execute custom uninstall script")
 
 # begin of custom uninstall code
-
-# uninstall files installed using the symlink install functions
-include("/home/daisuke/unitree_ros_ws/src/point_lio_unilidar/build/point_lio_unilidar/ament_cmake_symlink_install/ament_cmake_symlink_install_uninstall_script.cmake")

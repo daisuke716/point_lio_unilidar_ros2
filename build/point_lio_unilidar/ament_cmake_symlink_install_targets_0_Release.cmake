@@ -1,1 +1,0 @@
-ament_cmake_symlink_install_targets("TARGET_FILES" "/home/daisuke/unitree_ros_ws/src/point_lio_unilidar/build/point_lio_unilidar/pointlio_mapping" "TARGETS" "pointlio_mapping" "DESTINATION" "lib/point_lio_unilidar")
