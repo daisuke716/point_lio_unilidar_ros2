@@ -1,6 +1,6 @@
-.vscode
-./PCD/scans.pcd
-./CMakeFiles/
-./log/
-./build/
-./install/
+.vscode/
+PCD/scans.pcd
+CMakeFiles/
+log/
+build/
+install/
