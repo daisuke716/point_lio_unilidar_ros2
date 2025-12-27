@@ -975,8 +975,14 @@ int main(int argc, char **argv)
         {
             if (!p_imu->gravity_align_)
             {
-            while (Measures.lidar_beg_time > time_from_msg(imu_next.header.stamp))
+                while (Measures.lidar_beg_time > time_from_msg(imu_next.header.stamp))
                 {
+                    if (imu_deque.empty())
+                    {
+                        RCLCPP_WARN(rclcpp::get_logger("pointlio_mapping"),
+                                    "IMU buffer empty during gravity alignment; skipping alignment for this frame");
+                        break;
+                    }
                     imu_last = imu_next;
                     imu_next = *(imu_deque.front());
                     imu_deque.pop_front();
@@ -1137,6 +1143,12 @@ int main(int argc, char **argv)
                     {
                         while (time_current > time_from_msg(imu_next.header.stamp))
                         {
+                            if (imu_deque.empty())
+                            {
+                                RCLCPP_WARN(rclcpp::get_logger("pointlio_mapping"),
+                                            "IMU buffer empty during first-frame propagation; skipping this frame");
+                                break;
+                            }
                             imu_last = imu_next;
                             imu_next = *(imu_deque.front());
                             imu_deque.pop_front();
@@ -1156,6 +1168,12 @@ int main(int argc, char **argv)
                     bool imu_comes = time_current > time_from_msg(imu_next.header.stamp);
                     while (imu_comes)
                     {
+                        if (imu_deque.empty())
+                        {
+                            RCLCPP_WARN(rclcpp::get_logger("pointlio_mapping"),
+                                        "IMU buffer empty during propagation; skipping remaining IMU updates");
+                            break;
+                        }
                         imu_upda_cov = true;
                         angvel_avr << imu_next.angular_velocity.x, imu_next.angular_velocity.y, imu_next.angular_velocity.z;
                         acc_avr << imu_next.linear_acceleration.x, imu_next.linear_acceleration.y, imu_next.linear_acceleration.z;
@@ -1273,6 +1291,12 @@ int main(int argc, char **argv)
                 {
                     while (time_current > time_from_msg(imu_next.header.stamp))
                     {
+                        if (imu_deque.empty())
+                        {
+                            RCLCPP_WARN(rclcpp::get_logger("pointlio_mapping"),
+                                        "IMU buffer empty during first-frame init (input); skipping this frame");
+                            break;
+                        }
                         imu_last = imu_next;
                         imu_next = *(imu_deque.front());
                         imu_deque.pop_front();
@@ -1298,6 +1322,12 @@ int main(int argc, char **argv)
 
                 while (time_current > time_from_msg(imu_next.header.stamp))
                 {
+                    if (imu_deque.empty())
+                    {
+                        RCLCPP_WARN(rclcpp::get_logger("pointlio_mapping"),
+                                    "IMU buffer empty during propagation (input); skipping remaining IMU updates");
+                        break;
+                    }
                     imu_last = imu_next;
                     imu_next = *(imu_deque.front());
                     imu_deque.pop_front();
