@@ -82,6 +82,11 @@ cd unilidar_sdk/unitree_lidar_ros
 catkin_make
 ```
 
+### 3.4 go2
+```
+source /home/daisuke/unitree_ros_ws/src/unitree_ros2/setup.sh
+```
+
 ## 4. Build
 
 Clone this repository and run `colcon build`:
@@ -126,7 +131,7 @@ ros2 launch point_lio_unilidar_ros2 mapping_unilidar_l1.launch.py
 
 After completion of the run, all cached pointcloud map will be saved to the following path:
 ```
-catkin_point_lio_unilidar/src/point_lio_unilidar/PCD/scans.pcd
+unitree_ros_ws/src/point_lio_unilidar/PCD/scans.pcd
 ```
 
 You can use the `pcl_viewer` tool to view this pcd file:
