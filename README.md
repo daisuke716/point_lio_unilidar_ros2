@@ -95,7 +95,7 @@ git clone https://github.com/daisuke716/point_lio_unilidar_ros2
 
 cd ..
 
-colcon build --packages-select point_lio_unilidar_ros2
+colcon build --packages-select point_lio_unilidar_ros2 --symlink-install
 ```
 
 
