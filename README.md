@@ -82,11 +82,6 @@ cd unilidar_sdk/unitree_lidar_ros
 catkin_make
 ```
 
-### 3.4 go2
-```
-source /home/daisuke/unitree_ros_ws/src/unitree_ros2/setup.sh
-```
-
 ## 4. Build
 
 Clone this repository and run `colcon build`:
@@ -117,6 +112,11 @@ cd unilidar_sdk/unitree_lidar_ros
 source devel/setup.bash
 
 roslaunch unitree_lidar_ros run_without_rviz.launch
+```
+or
+Run `go2`
+```
+source /home/daisuke/unitree_ros_ws/src/unitree_ros2/setup.sh
 ```
 
 Run `Point-LIO`:
