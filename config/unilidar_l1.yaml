@@ -46,6 +46,8 @@
       extrinsic_R: [1.0, 0.0, 0.0,
                     0.0, 1.0, 0.0,
                     0.0, 0.0, 1.0] #l1
+      mount_rpy: [0.0, 2.8782, 0.0]  # mounting compensation on go2 
+
 
     odometry:
       publish_odometry_without_downsample: false

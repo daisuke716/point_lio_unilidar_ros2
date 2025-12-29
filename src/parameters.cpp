@@ -70,6 +70,7 @@ std::vector<double> gravity;
 
 std::vector<double> extrinT;
 std::vector<double> extrinR;
+std::vector<double> mount_rpy;
 
 bool runtime_pos_log;
 bool pcd_save_en;
@@ -133,6 +134,7 @@ void readParameters(rclcpp::Node::SharedPtr node)
   gravity_init = node->declare_parameter<std::vector<double>>("mapping.gravity_init", std::vector<double>());
   extrinT = node->declare_parameter<std::vector<double>>("mapping.extrinsic_T", std::vector<double>());
   extrinR = node->declare_parameter<std::vector<double>>("mapping.extrinsic_R", std::vector<double>());
+  mount_rpy = node->declare_parameter<std::vector<double>>("mapping.mount_rpy", std::vector<double>({0.0, 0.0, 0.0}));
   publish_odometry_without_downsample = node->declare_parameter<bool>("odometry.publish_odometry_without_downsample", false);
   path_en = node->declare_parameter<bool>("publish.path_en", true);
   scan_pub_en = node->declare_parameter<bool>("publish.scan_publish_en", true);

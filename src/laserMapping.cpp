@@ -302,6 +302,32 @@ void standard_pcl_cbk(const sensor_msgs::msg::PointCloud2::SharedPtr &msg)
 
     p_pre->process(msg, ptr);
 
+    // Apply fixed mounting rotation to point cloud (roll, pitch, yaw).
+    static Eigen::Matrix3d mount_rot = Eigen::Matrix3d::Identity();
+    static bool mount_rot_ready = false;
+    if (!mount_rot_ready && mount_rpy.size() == 3)
+    {
+        const double r = mount_rpy[0];
+        const double p = mount_rpy[1];
+        const double y = mount_rpy[2];
+        Eigen::AngleAxisd Rx(r, Eigen::Vector3d::UnitX());
+        Eigen::AngleAxisd Ry(p, Eigen::Vector3d::UnitY());
+        Eigen::AngleAxisd Rz(y, Eigen::Vector3d::UnitZ());
+        mount_rot = (Rz * Ry * Rx).toRotationMatrix();
+        mount_rot_ready = true;
+    }
+    if (mount_rot_ready)
+    {
+        for (auto &pt : ptr->points)
+        {
+            Eigen::Vector3d p3(pt.x, pt.y, pt.z);
+            p3 = mount_rot * p3;
+            pt.x = static_cast<float>(p3.x());
+            pt.y = static_cast<float>(p3.y());
+            pt.z = static_cast<float>(p3.z());
+        }
+    }
+
     // std::cout << "ptr->points.size() = " << ptr->points.size() << std::endl;
 
     if (cut_frame)
@@ -386,6 +412,34 @@ void imu_cbk(const sensor_msgs::msg::Imu::SharedPtr &msg_in)
     publish_count++;
 
     auto msg = std::make_shared<sensor_msgs::msg::Imu>(*msg_in);
+
+    // Apply fixed mounting rotation (roll, pitch, yaw) to IMU measurements.
+    static Eigen::Matrix3d mount_rot = Eigen::Matrix3d::Identity();
+    static bool mount_rot_ready = false;
+    if (!mount_rot_ready && mount_rpy.size() == 3)
+    {
+        const double r = mount_rpy[0];
+        const double p = mount_rpy[1];
+        const double y = mount_rpy[2];
+        Eigen::AngleAxisd Rx(r, Eigen::Vector3d::UnitX());
+        Eigen::AngleAxisd Ry(p, Eigen::Vector3d::UnitY());
+        Eigen::AngleAxisd Rz(y, Eigen::Vector3d::UnitZ());
+        mount_rot = (Rz * Ry * Rx).toRotationMatrix();
+        mount_rot_ready = true;
+    }
+    if (mount_rot_ready)
+    {
+        Eigen::Vector3d acc(msg->linear_acceleration.x, msg->linear_acceleration.y, msg->linear_acceleration.z);
+        Eigen::Vector3d gyr(msg->angular_velocity.x, msg->angular_velocity.y, msg->angular_velocity.z);
+        acc = mount_rot * acc;
+        gyr = mount_rot * gyr;
+        msg->linear_acceleration.x = acc.x();
+        msg->linear_acceleration.y = acc.y();
+        msg->linear_acceleration.z = acc.z();
+        msg->angular_velocity.x = gyr.x();
+        msg->angular_velocity.y = gyr.y();
+        msg->angular_velocity.z = gyr.z();
+    }
 
 
     double stamp_in = double(msg_in->header.stamp.sec) + double(msg_in->header.stamp.nanosec) * 1e-9;
