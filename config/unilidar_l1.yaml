@@ -8,22 +8,23 @@
       con_frame_num: 1
       cut_frame: false
       cut_frame_time_interval: 0.1
-      time_lag_imu_to_lidar: 0.08
+      time_lag_imu_to_lidar: 0.0  # Time offset between LiDAR and IMU calibrated by other algorithms, e.g., LI-Init (find in Readme)
+                                # the timesample of IMU is transferred from the current timeline to LiDAR's timeline by subtracting this value
 
     preprocess:
       lidar_type: 5
       scan_line: 18
-      timestamp_unit: 0
+      timestamp_unit: 0   # the unit of time/t field in the PointCloud2 rostopic: 0-second, 1-milisecond, 2-microsecond, 3-nanosecond.
       blind: 0.5
 
     mapping:
       imu_en: true
-      start_in_aggressive_motion: false
-      extrinsic_est_en: false
-      imu_time_inte: 0.004
-      satu_acc: 30.0
-      satu_gyro: 35.0
-      acc_norm: 9.81
+      start_in_aggressive_motion: false   # if true, a preknown gravity should be provided in following gravity_init
+      extrinsic_est_en: false   # for aggressive motion, set this variable false
+      imu_time_inte: 0.004  # = 1 / frequency of IMU   （250hz）
+      satu_acc: 30.0   # the saturation value of IMU's acceleration. not related to the units
+      satu_gyro: 35.0  # the saturation value of IMU's angular velocity. not related to the units
+      acc_norm: 9.81   # 1.0 for g as unit, 9.81 for m/s^2 as unit of the IMU's acceleration
       lidar_meas_cov: 0.01
       acc_cov_output: 500.0
       gyr_cov_output: 1000.0
@@ -37,24 +38,24 @@
       match_s: 81.0
       fov_degree: 180.0
       det_range: 100.0
-      gravity_align: true
-      gravity: [0.0, 0.0, 9.810] # for go2
-      gravity_init: [3.605, 0.021, 9.527] # for go2
-      # gravity_init: [0, 0, 9.527]
+      gravity_align: true   # true to align the z axis of world frame with the direction of gravity, and the gravity direction should be specified below
+      gravity: [0.0, 0.0, 9.810]   # gravity to be aligned
+      gravity_init: [0.0, 0.0, 9.810]   # preknown gravity in the first IMU body frame, use when imu_en is false or start from a non-stationary state
 
-      extrinsic_T: [0.007698, 0.014655, -0.00667]
+      extrinsic_T: [0.007698, 0.014655, -0.00667]  #l1
       extrinsic_R: [1.0, 0.0, 0.0,
                     0.0, 1.0, 0.0,
-                    0.0, 0.0, 1.0]
+                    0.0, 0.0, 1.0] #l1
 
     odometry:
       publish_odometry_without_downsample: false
 
     publish:
-      path_en: true
-      scan_publish_en: true
-      scan_bodyframe_pub_en: false
+      path_en: true   # false: close the path output
+      scan_publish_en: true  # false: close all the point cloud output
+      scan_bodyframe_pub_en: false   # true: output the point cloud scans in IMU-body-frame
 
     pcd_save:
-      pcd_save_en: true
-      interval: -1
+      pcd_save_en: false # save map to pcd file
+      interval: -1 # how many LiDAR frames saved in each pcd file; 
+                   # -1 : all frames will be saved in ONE pcd file, may lead to memory crash when having too much frames.
